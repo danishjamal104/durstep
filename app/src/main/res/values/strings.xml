@@ -1,3 +1,150 @@
 <resources>
     <string name="app_name">DurStep</string>
+
+    <string name="language">हिन</string>
+
+    <!--intro activity-->
+    <string name="intro_welcome">Welcome</string>
+    <string name="intro_Login">Login</string>
+    <string name="intro_SignUp">SignUp</string>
+    <string name="intro_welcome_message">Delivering Milk At Your Doorstep</string>
+
+    <!--login activity-->
+    <string name="login_username_hint">Mobile Number</string>
+    <string name="login_password_hint">Password</string>
+
+    <!--signUp activity-->
+    <string name="signUp_confirm_password_hint">Confirm Password</string>
+    <string name="username_error">Enter 10 digit mobile number</string>
+    <string name="password_short_error">Length must be >= 8</string>
+    <string name="password_match_error">Password doesn\'t match</string>
+
+    <!--main activity-->
+    <string name="title_home">Home</string>
+    <string name="bt_new_order">New Order</string>
+    <string name="bt_all_order">All Orders</string>
+    <string name="bt_profile">Profile</string>
+    <string name="bt_scan">Scan Qr</string>
+    <string name="bt_show_qr">Show Qr</string>
+    <string name="clients">Clients</string>
+    <string name="bt_logout">Log Out</string>
+    <string name="scan_qr_info">Scan Qr To Receive Order</string>
+    <string name="pending_orders">Pending Orders</string>
+    <string name="display_name">Display Name</string>
+    <string name="edit"><u>Edit</u></string>
+    <string name="no_pending_orders">No Pending Orders</string>
+    <string name="admin_text">Admin</string>
+    <string name="reEnter_pwd">Enter old password</string>
+    <string name="choose_delivering_amount">Choose amount of milk you are delivering</string>
+    <string name="your_order_has_been_placed">Your order has been placed.</string>
+    <string name="server_error">Server Error</string>
+    <string name="cancel">Cancel</string>
+
+    <!--profile layout-->
+    <string name="profile_new_name">New name</string>
+    <string name="profile_new_number">New number</string>
+    <string name="profile_new_password">New password</string>
+    <string name="profile_error_new_name">Name can\'t be empty</string>
+    <string name="profile_updated">Profile Updated</string>
+
+    <string name="profile_no_change">No change</string>
+    <string name="profile_authenticate">Authenticate</string>
+
+    <string name="wrong_pwd">Wrong password</string>
+    <string name="wrong_credential">Wrong credential</string>
+
+
+    <!--transition from intro to login-->
+    <string name="intro_to_login_button" translatable="false">introToLoginButton</string>
+    <string name="intro_to_signUp_button" translatable="false">introToSignUpButton</string>
+    <string name="intro_to_login_header" translatable="false">introToLoginHeader</string>
+
+    <!--pending request list item-->
+    <string name="litre_abbreviation">L</string>
+
+    <!--dialog_layout-->
+    <string name="no_order">No orders yet</string>
+
+    <string name="choose_pending_order">Select Order To Receive</string>
+    <string name="invalid_pending_order">Invalid Order</string>
+
+    <!--order activity-->
+    <string name="enter_keyword_to_search">Enter keyword to search</string>
+
+    <string name="filter_option">Filter options</string>
+
+    <string name="filter_option_show_all">All</string>
+    <string name="filter_option_show_pending">Pending</string>
+    <string name="filter_option_show_delivered">Delivered</string>
+    <string name="filter_option_show_canceled_by_admin">Canceled by admin</string>
+    <string name="filter_option_show_canceled_by_client">Canceled by client</string>
+
+    <string name="apply">Apply</string>
+
+    <string name="ok">Ok</string>
+
+    <string name="order">Order</string>
+
+    <!--detail view of order-->
+    <string name="order_by">By: </string>
+    <string name="order_time">Time: </string>
+    <string name="order_id">Id: </string>
+    <string name="order_status">Status: </string>
+    <string name="order_amount">Amount: </string>
+
+
+    <!--view of user for manage section for admin-->
+    <string name="total_order">Total Orders</string>
+    <string name="name">Name: </string>
+    <string name="number">Number: </string>
+    <string name="distributor">Distributor</string>
+    <string name="client">Client</string>
+    <string name="say_hello_to">Say hello</string>
+    <string name="send_message">Send message</string>
+    <string name="message_empty_error">Message can\'t be empty</string>
+    <string name="client_to_distributor">Give distributor access to the user?</string>
+    <string name="distributor_to_client">Revoke distributor access from the user?</string>
+
+    <string-array name="litres">
+        <!--<item name="zero">0</item>-->
+        <item name="zero.five">0.5</item>
+        <item name="one">1</item>
+        <item name="one.five">1.5</item>
+        <item name="two">2</item>
+        <item name="two.five">2.5</item>
+        <item name="three">3</item>
+        <item name="three.five">3.5</item>
+        <item name="four">4</item>
+        <item name="four.five">4.5</item>
+        <item name="five">5</item>
+    </string-array>
+
+    <string-array name="order_options">
+        <item name="oo_pending">Mark as pending</item>
+        <item name="oo_delivered">Mark as delivered</item>
+        <item name="oo_cancel">Mark as cancel</item>
+    </string-array>
+
+    <string name="cancel_order">Cancel Order ?</string>
+
+    <string name="delete">Delete</string>
+    <string name="success">Success</string>
+    <string name="failure">Failure</string>
+
+    <string name="internet_error">You are offline</string>
+
+    <string name="delivered_by">Delivered By: </string>
+
+    <string name="give_feedback">Please give feedback</string>
+    <string name="later">Later</string>
+    <string name="submit_feedback">Submit Feedback</string>
+
+    <string name="default_notification_channel_id" translatable="false">1472</string>
+
+   <!-- bottom app bar menu-->
+    <string name="menu_home">Home</string>
+    <string name="menu_stats">Stats</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_about_us">About Us</string>
+
 </resources>

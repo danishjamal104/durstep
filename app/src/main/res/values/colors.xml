@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimary">#7DC9F8</color>
+    <color name="colorPrimaryDark">#1B2946</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <color name="menu_item_selected">#FBC02D</color>
+    <color name="menu_item_unSelected">#fff</color>
+    <color name="bottom_app_bar">#1B2946</color>
+
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
 </resources>

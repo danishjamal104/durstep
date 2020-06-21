@@ -1,18 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <FrameLayout
+        android:id="@+id/main_fragmentContainer_fl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/main_scan_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_anchor="@id/main_bottomMenuBar_bap"
+        android:src="@drawable/ic_qr_white"
+        app:layout_anchorGravity="center|top"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/main_bottomMenuBar_bap"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_bar_height"
+        android:layout_gravity="bottom"
+        android:backgroundTint="@color/bottom_app_bar">
+
+        <LinearLayout
+            android:id="@+id/main_menuContainer_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:paddingStart="-12dp"
+            android:paddingEnd="0dp"
+            android:weightSum="5">
+
+            <TextView
+                style="@style/bottom_bar_menu_item_theme"
+                android:id="@+id/main_menu_home_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_menu_home"
+                android:text="@string/menu_home"
+                android:textColor="@color/menu_item_unSelected">
+
+            </TextView>
+
+            <TextView
+                style="@style/bottom_bar_menu_item_theme"
+                android:id="@+id/main_menu_stats_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_menu_stats"
+                android:text="@string/menu_stats"
+                android:textColor="#FFFFFF"
+                >
+
+            </TextView>
+
+            <TextView
+                style="?android:attr/borderlessButtonStyle"
+                android:id="@+id/main_menu_spare_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Scan"
+                android:gravity="center"
+                android:visibility="invisible">
+
+            </TextView>
+
+            <TextView
+                style="@style/bottom_bar_menu_item_theme"
+                android:id="@+id/main_menu_profile_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTint="#fff"
+                android:drawableTop="@drawable/ic_menu_profile"
+                android:text="@string/menu_profile"
+                android:textColor="#FFFFFF">
+
+            </TextView>
+
+            <TextView
+                style="@style/bottom_bar_menu_item_theme"
+                android:id="@+id/main_menu_info_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_menu_info"
+                android:drawableTint="#fff"
+                android:text="@string/menu_about_us"
+                android:textColor="#FFFFFF">
+
+
+
+            </TextView>
+
+        </LinearLayout>
+
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

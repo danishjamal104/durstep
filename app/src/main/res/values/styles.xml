@@ -7,4 +7,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="bottom_bar_menu_item_theme" parent="Widget.AppCompat.TextView">
+        <item name="background">?android:attr/selectableItemBackground</item>
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:drawablePadding">2dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:scaleX">0.8</item>
+        <item name="android:scaleY">0.8</item>
+    </style>
+
 </resources>
