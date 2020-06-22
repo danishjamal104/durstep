@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="20dp"
+    android:elevation="5dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="8dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/subs_litreContainer_rl"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:scaleY="0.7"
+            android:scaleX="0.7"
+            android:layout_centerVertical="true">
+
+            <RelativeLayout
+                android:id="@+id/subs_list_numberContainer_rl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp">
+
+                <ImageView
+                    android:id="@+id/subs_list_numberContainer_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/circle" />
+
+                <TextView
+                    android:id="@+id/subs_list_item_number_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1.5 L"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/subs_item_menu_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_menu_info"
+            app:backgroundTint="@color/colorPrimaryDark"
+            android:layout_alignParentEnd="true"
+            android:scaleX="0.4"
+            android:scaleY="0.4"
+            tools:ignore="RelativeOverlap" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/subs_litreContainer_rl">
+            <TextView
+                android:id="@+id/subs_item_monthlyRate_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/subs_monthly_rate"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimary"
+                android:fontFamily="@font/roboto_regular"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/subs_item_deliveryTime_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/subs_delivery_time"
+                android:textSize="14sp"
+                android:fontFamily="@font/roboto_regular"
+                android:textStyle="bold"
+                android:textColor="#901B2946" />
+        </LinearLayout>
+
+
+
+
+    </RelativeLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

@@ -135,8 +135,19 @@ public class Utils {
         }
     }
 
+    public static int getMonthlyRate(double ratePerLitre, double litre){
+        double perDayCost = ratePerLitre*litre;
+        double month_30 = perDayCost*30;
+        double month_31 = perDayCost*31;
+
+        return (int)((month_30+month_31)/2);
+    }
+
     public static void toast(Context context, String msg){
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
+    public static void longToast(Context context, String msg){
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
     public static void log(String msg){
         Log.i("test", msg);

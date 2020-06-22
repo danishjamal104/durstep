@@ -8,6 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.durstep.durstep.R;
+import com.durstep.durstep.adapter.SubscriptionAdapter;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.manager.DbManager;
@@ -35,6 +39,12 @@ public class HomeFragment extends Fragment {
     FloatingActionButton newSubscription_fab;
     TextView background_tv;
 
+    SwipeRefreshLayout refreshLayout;
+    RecyclerView subs_rv;
+    SubscriptionAdapter subs_adapter;
+
+
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -45,6 +55,10 @@ public class HomeFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_home, container, false);
         newSubscription_fab = view.findViewById(R.id.home_addSubscription_fab);
         background_tv = view.findViewById(R.id.home_noSubsMessage_tv);
+        refreshLayout = view.findViewById(R.id.home_refreshLayout_srl);
+        subs_rv = view.findViewById(R.id.home_subs_list_rv);
+        subs_rv.setHasFixedSize(false);
+        subs_rv.setLayoutManager(new LinearLayoutManager(getContext()));
         return view;
     }
 
@@ -55,6 +69,42 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showNewSubscriptionDialog(false);
+            }
+        });
+        subs_adapter = new SubscriptionAdapter(getContext());
+        subs_rv.setAdapter(subs_adapter);
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadSubscriptions();
+            }
+        });
+        loadSubscriptions();
+    }
+    void loadSubscriptions(){
+        refreshLayout.setRefreshing(true);
+        DbManager.getSubscriptionOfCurrentUser(new FirebaseTask<Subscription>() {
+            @Override
+            public void onComplete(boolean isSuccess, String error) {
+                if(isSuccess){
+                    background_tv.setVisibility(View.VISIBLE);
+                }else{
+                    Utils.longToast(getContext(), error);
+                }
+                refreshLayout.setRefreshing(false);
+            }
+            @Override
+            public void onSingleDataLoaded(Subscription object) {
+
+            }
+            @Override
+            public void onMultipleDataLoaded(List<Subscription> objects) {
+                if(objects!=null){
+                    subs_adapter.addAll(objects);
+                    background_tv.setVisibility(View.GONE);
+                }
+                refreshLayout.setRefreshing(false);
             }
         });
     }
@@ -123,7 +173,7 @@ public class HomeFragment extends Fragment {
         Utils.log("Amount: ".concat(""+amount));
 
         Subscription subscription = new Subscription();
-        subscription.setsId(DbManager.getNewUid().getId());
+        subscription.setsId(DbManager.getNewSubsId());
         subscription.setAmount(amount);
         subscription.setuId(DbManager.getUid());
         subscription.setDeliveryTime(time);

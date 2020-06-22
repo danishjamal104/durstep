@@ -28,6 +28,7 @@ public class BaseActivity extends AppCompatActivity {
         }else{
             setNewLocale(BaseActivity.this, LocaleManager.ENGLISH);
         }
+
     }
     protected void hide(View v){
         v.setVisibility(View.GONE);

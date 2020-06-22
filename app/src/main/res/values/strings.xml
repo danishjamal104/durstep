@@ -154,5 +154,10 @@
     <string name="new_subs_alert_title">Enter time and litres to start a new subscription</string>
     <string name="invalid_time_format">Invalid time format</string>
 
+    <string name="subs_monthly_rate">Monthly Expenditure: Rs.</string>
+    <string name="subs_delivery_time">Delivery Time: </string>
+
+    <string name="subs_menu_track">Track</string>
+    <string name="subs_menu_add_instruction">Add Instruction</string>
 
 </resources>

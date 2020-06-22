@@ -17,7 +17,9 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DbManager {
@@ -123,6 +125,29 @@ public class DbManager {
             }
         });
     }
+    public static void getSubscriptionOfCurrentUser(FirebaseTask<Subscription> subscriptionFirebaseTask){
+        getmRef().collection("subscriptions")
+                .whereEqualTo("uId", getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            if(task.getResult().getDocuments().size()==0){
+                                subscriptionFirebaseTask.onComplete(true, null);
+                            }else{
+                                List<Subscription> subscriptionList = new ArrayList<>();
+                                for(DocumentSnapshot snapshot: task.getResult()){
+                                    subscriptionList.add(snapshot.toObject(Subscription.class));
+                                }
+                                subscriptionFirebaseTask.onMultipleDataLoaded(subscriptionList);
+                            }
+                        }else{
+                            subscriptionFirebaseTask.onComplete(false, task.getException().getLocalizedMessage());
+                        }
+                    }
+                });
+    }
 
     public static FirebaseAuth getmAuth(){
         if(mAuth==null){
@@ -146,8 +171,12 @@ public class DbManager {
         return userRef;
     }
 
-    public final static DocumentReference getNewUid(){
-        return mRef.collection("user").document(getUid());
+    public static DocumentReference getNewUid(){
+        return getmRef().collection("user").document();
+    }
+
+    public static String getNewSubsId(){
+        return getmRef().collection("subscriptions").document().getId();
     }
 
 }

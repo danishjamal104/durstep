@@ -107,4 +107,8 @@
     <string name="delivery_time">डिलीवरी का समय</string>
     <string name="new_subs_alert_title">एक नई सदस्यता शुरू करने के लिए समय और लीटर दर्ज करें</string>
     <string name="invalid_time_format">अमान्य समय प्रारूप</string>
+    <string name="subs_monthly_rate">मासिक व्यय: रु</string>
+    <string name="subs_delivery_time">डिलीवरी का समय:</string>
+    <string name="subs_menu_track">टृैक​</string>
+    <string name="subs_menu_add_instruction">निर्देश जोड़ें</string>
 </resources>

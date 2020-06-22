@@ -13,11 +13,6 @@ functions.https.onRequest((req, res)=>{
     const title= ""+req.query.title
     const message = ""+req.query.msg
 
-    console.log(`to lenght=${to?.length}`)
-    console.log(title)
-    console.log(message)
-
-
     admin.firestore().doc(`user/${to}`).get()
     .then(ud => {
         const push_token = ud.data()?.push_token
