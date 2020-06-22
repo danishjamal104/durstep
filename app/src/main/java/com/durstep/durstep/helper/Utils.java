@@ -20,6 +20,9 @@ public class Utils {
         return isValidNumber(""+number);
     }
     public static boolean isValidNumber(String number){
+        if(number.equals("")){
+            return false;
+        }
         number = number.replaceAll("\\s", "");
         if(number.length()==10){
             return true;
@@ -67,7 +70,7 @@ public class Utils {
         return number;
     }
     public final static String getDomain(){
-        return "@xyz.com";
+        return "@durstep.com";
     }
     public static String getDate(com.google.firebase.Timestamp timestamp){
         SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");

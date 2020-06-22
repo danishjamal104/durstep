@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#7DC9F8</color>
-    <color name="colorPrimaryDark">#1B2946</color>
+    <color name="colorPrimary">#1B2946</color>
+    <color name="colorPrimaryDark">#7DC9F8</color>
     <color name="colorAccent">#03DAC5</color>
 
     <color name="menu_item_selected">#FBC02D</color>
@@ -10,4 +10,9 @@
 
     <color name="white">#fff</color>
     <color name="black">#000</color>
+    <color name="grey">#808080</color>
+
+    <color name="box_outline">#00796B</color>
+
+    <color name="hyperlink_color">#0645AD</color>
 </resources>

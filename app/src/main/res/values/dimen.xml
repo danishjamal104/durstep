@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="bottom_bar_height">62dp</dimen>
+
+    <!--authentication-->
+    <dimen name="login_signUp_button_height">58dp</dimen>
+    <dimen name="login_signUp_button_width">100dp</dimen>
+    <dimen name="login_signUp_button_textSize">16sp</dimen>
 </resources>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_login_bg"
+    tools:context=".authentication.LoginActivity">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_number_til"
+        style="@style/auth_til_theme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="132dp"
+        android:hint="@string/login_username_hint"
+        app:endIconMode="clear_text"
+        app:startIconDrawable="@drawable/ic_phone_black">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_number_til_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberSigned"
+            android:padding="26dp"
+            android:textSize="16sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_password_til"
+        style="@style/auth_til_theme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_number_til"
+        android:layout_centerInParent="true"
+        android:hint="@string/login_password_hint"
+        app:endIconMode="password_toggle"
+        app:startIconDrawable="@drawable/ic_pwd">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_password_til_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:padding="26dp"
+            android:textSize="16sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_login_btn"
+        style="@style/auth_button_theme"
+        android:layout_width="@dimen/login_signUp_button_width"
+        android:layout_height="@dimen/login_signUp_button_height"
+        android:layout_below="@id/login_password_til"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:text="@string/intro_Login" />
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/login_progress_pb"
+        style="@style/SpinKitView.Large.MultiplePulse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/grey"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>

@@ -16,4 +16,21 @@
         <item name="android:scaleY">0.8</item>
     </style>
 
+    <style name="auth_til_theme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_marginStart">32dp</item>
+        <item name="android:layout_marginEnd">32dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="hintTextColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="auth_button_theme" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="cornerRadius">5dp</item>
+        <item name="elevation">12dp</item>
+        <item name="android:textSize">@dimen/login_signUp_button_textSize</item>
+        <item name="fontFamily">@font/roboto_regular</item>
+    </style>
+
 </resources>
