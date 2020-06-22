@@ -1,0 +1,153 @@
+package com.durstep.durstep.fragment;
+
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
+
+import com.durstep.durstep.R;
+import com.durstep.durstep.helper.Utils;
+import com.durstep.durstep.interfaces.FirebaseTask;
+import com.durstep.durstep.manager.DbManager;
+import com.durstep.durstep.model.Subscription;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.Timestamp;
+
+import java.util.Date;
+import java.util.List;
+
+public class HomeFragment extends Fragment {
+
+    FloatingActionButton newSubscription_fab;
+    TextView background_tv;
+
+    public HomeFragment() {
+        // Required empty public constructor
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view =  inflater.inflate(R.layout.fragment_home, container, false);
+        newSubscription_fab = view.findViewById(R.id.home_addSubscription_fab);
+        background_tv = view.findViewById(R.id.home_noSubsMessage_tv);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        newSubscription_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNewSubscriptionDialog(false);
+            }
+        });
+    }
+    void showNewSubscriptionDialog(boolean error){
+        View v = getLayoutInflater().inflate(R.layout.new_subscription_layout, null);
+        Spinner spinner = v.findViewById(R.id.new_subscription_amount_sp);
+        TextInputLayout time = v.findViewById(R.id.new_subscription_time_til);
+        EditText time_et = time.getEditText();
+        time_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    TimePickerDialog dialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            time_et.setText(Utils.formatTime(hourOfDay, minute));
+                            if(error){
+                                time.setErrorEnabled(false);
+                            }
+                        }
+                    }, 00, 00, false);
+
+                    dialog.show();
+                }
+            }
+        });
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.litres, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        if(error){
+            time.setError(getString(R.string.invalid_time_format));
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(false);
+        builder.setTitle(getString(R.string.new_subs_alert_title));
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String time = time_et.getText().toString().trim();
+                if(!Utils.isValidTime(time)){
+                    showNewSubscriptionDialog(true);
+                    return;
+                }
+                double amount = Double.parseDouble(spinner.getSelectedItem().toString().split(" ")[0]);
+                subscribe(time, amount);
+            }
+        });
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.setView(v);
+        builder.show();
+    }
+    void subscribe(String time, double amount){
+        String[] hh_mm = time.split(":");
+        String hh = hh_mm[0];
+        String mm = hh_mm[1];
+        Utils.log("Hours: ".concat(hh));
+        Utils.log("Minutes: ".concat(mm));
+        Utils.log("Amount: ".concat(""+amount));
+
+        Subscription subscription = new Subscription();
+        subscription.setsId(DbManager.getNewUid().getId());
+        subscription.setAmount(amount);
+        subscription.setuId(DbManager.getUid());
+        subscription.setDeliveryTime(time);
+        subscription.setsDate(new Timestamp(new Date()));
+
+        DbManager.createNewSubscription(subscription, new FirebaseTask<Void>() {
+            @Override
+            public void onComplete(boolean isSuccess, String error) {
+                if(isSuccess){
+
+                }else{
+                    Utils.toast(getContext(), error);
+                }
+            }
+
+            @Override
+            public void onSingleDataLoaded(Void object) {
+
+            }
+
+            @Override
+            public void onMultipleDataLoaded(List<Void> objects) {
+
+            }
+        });
+    }
+}

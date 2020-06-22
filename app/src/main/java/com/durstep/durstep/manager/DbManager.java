@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.model.AppMode;
+import com.durstep.durstep.model.Subscription;
 import com.durstep.durstep.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -55,7 +56,7 @@ public class DbManager {
             }
         });
     }
-    public final static void logIn(String id, String pwd, FirebaseTask<User> firebaseTask){
+    public static void logIn(String id, String pwd, FirebaseTask<User> firebaseTask){
         getmAuth().signInWithEmailAndPassword(id, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -67,7 +68,7 @@ public class DbManager {
             }
         });
     }
-    public final static void signUp(User user, String id, String pwd, FirebaseTask<Void> firebaseTask){
+    public  static void signUp(User user, String id, String pwd, FirebaseTask<Void> firebaseTask){
         getmAuth().createUserWithEmailAndPassword(id, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -83,7 +84,7 @@ public class DbManager {
             }
         });
     }
-    public final static void getUser(FirebaseTask<User> userFirebaseTask){
+    public static void getUser(FirebaseTask<User> userFirebaseTask){
         getUserRef().get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -95,8 +96,7 @@ public class DbManager {
             }
         });
     }
-
-    public final static void createUser(User user, FirebaseTask<Void> userFirebaseTask){
+    public static void createUser(User user, FirebaseTask<Void> userFirebaseTask){
         user.setUid(getUid());
         getUserRef().set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -105,6 +105,20 @@ public class DbManager {
                     userFirebaseTask.onComplete(true, null);
                 }else {
                     userFirebaseTask.onComplete(false, task.getException().getLocalizedMessage());
+                }
+            }
+        });
+    }
+    public static void createNewSubscription(Subscription subscription, FirebaseTask<Void> firebaseTask){
+        getmRef().document("subscriptions/"+subscription.getsId()).set(subscription)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    firebaseTask.onComplete(true, null);
+                }
+                else{
+                    firebaseTask.onComplete(false, task.getException().getLocalizedMessage());
                 }
             }
         });

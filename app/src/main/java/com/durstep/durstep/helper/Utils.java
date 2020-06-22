@@ -1,6 +1,9 @@
 package com.durstep.durstep.helper;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
@@ -77,6 +80,25 @@ public class Utils {
         return sfd.format(timestamp.toDate());
     }
 
+    public static String formatTime(int hoursOfDay, int minute){
+        return ""+hoursOfDay+":"+minute;
+    }
+    public static boolean isValidTime(String time){
+        // time = "hh:mm"
+        String[] hh_mm = time.split(":");
+        if(hh_mm.length!=2){
+            return false;
+        }
+
+        try{
+            int hh = Integer.parseInt(hh_mm[0]);
+            int mm = Integer.parseInt(hh_mm[1]);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
     public static String getDateTime(com.google.firebase.Timestamp timestamp){
         SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         return sfd.format(timestamp.toDate());
@@ -111,5 +133,12 @@ public class Utils {
         }catch (Exception e){
             return false;
         }
+    }
+
+    public static void toast(Context context, String msg){
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
+    public static void log(String msg){
+        Log.i("test", msg);
     }
 }

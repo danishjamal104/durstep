@@ -103,4 +103,8 @@
     <string name="menu_profile">प्रोफ़ाइल</string>
     <string name="menu_about_us">हमारे बारे में</string>
     <string name="already_account_text">क्या आपका खाता मौजूद है ?</string>
+    <string name="no_subs_message">आपने किसी भी सेवा के लिए सदस्यता नहीं ली है \\n+ बटन पर क्लिक करें</string>
+    <string name="delivery_time">डिलीवरी का समय</string>
+    <string name="new_subs_alert_title">एक नई सदस्यता शुरू करने के लिए समय और लीटर दर्ज करें</string>
+    <string name="invalid_time_format">अमान्य समय प्रारूप</string>
 </resources>

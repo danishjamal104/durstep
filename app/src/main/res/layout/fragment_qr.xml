@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.QrFragment">
+
+    <FrameLayout
+        android:id="@+id/qr_scan_content_fl"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/qr_scan_info_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/qr_scan_content_fl"
+        android:layout_centerHorizontal="true"
+        android:text="@string/scan_qr_info"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/roboto_bold_italic" />
+
+</RelativeLayout>

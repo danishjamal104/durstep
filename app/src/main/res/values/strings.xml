@@ -108,16 +108,16 @@
 
     <string-array name="litres">
         <!--<item name="zero">0</item>-->
-        <item name="zero.five">0.5</item>
-        <item name="one">1</item>
-        <item name="one.five">1.5</item>
-        <item name="two">2</item>
-        <item name="two.five">2.5</item>
-        <item name="three">3</item>
-        <item name="three.five">3.5</item>
-        <item name="four">4</item>
-        <item name="four.five">4.5</item>
-        <item name="five">5</item>
+        <item name="zero.five">0.5 Litres</item>
+        <item name="one">1 Litres</item>
+        <item name="one.five">1.5 Litres</item>
+        <item name="two">2 Litres</item>
+        <item name="two.five">2.5 Litres</item>
+        <item name="three">3 Litres</item>
+        <item name="three.five">3.5 Litres</item>
+        <item name="four">4 Litres</item>
+        <item name="four.five">4.5 Litres</item>
+        <item name="five">5 Litres</item>
     </string-array>
 
     <string-array name="order_options">
@@ -147,5 +147,12 @@
     <string name="menu_stats">Stats</string>
     <string name="menu_profile">Profile</string>
     <string name="menu_about_us">About Us</string>
+
+    <!--home fragment-->
+    <string name="no_subs_message">You haven\'t subscribed to any service.\nclick + add button</string>
+    <string name="delivery_time">Delivery time hh:mm</string>
+    <string name="new_subs_alert_title">Enter time and litres to start a new subscription</string>
+    <string name="invalid_time_format">Invalid time format</string>
+
 
 </resources>
