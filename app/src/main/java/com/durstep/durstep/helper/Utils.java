@@ -5,13 +5,19 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firestore.v1.DocumentTransform;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -107,6 +113,13 @@ public class Utils {
     public static String extractPhoneFromEmail(String email){
         // 9919114819@xyz.com
         return email.split("@")[0];
+    }
+
+    public static void customTimestamp(){
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date);
+
+
     }
 
     public static Bitmap getQrBitmap(String litre){

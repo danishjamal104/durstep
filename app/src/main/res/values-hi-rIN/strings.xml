@@ -111,4 +111,6 @@
     <string name="subs_delivery_time">डिलीवरी का समय:</string>
     <string name="subs_menu_track">टृैक​</string>
     <string name="subs_menu_add_instruction">निर्देश जोड़ें</string>
+    <string name="no_current_delivery">कोई सक्रिय वितरण नहीं।\\n नई डिलीवरी शुरू करने के लिए यहां क्लिक करें</string>
+    <string name="update">अपडेट</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.durstep.durstep.model;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
 
 public class Subscription {
 
@@ -9,6 +10,7 @@ public class Subscription {
     Timestamp sDate;
     String deliveryTime;
     Double amount;
+    DocumentReference active;
 
     public Subscription() {
     }
@@ -51,5 +53,13 @@ public class Subscription {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public DocumentReference getActive() {
+        return active;
+    }
+
+    public void setActive(DocumentReference active) {
+        this.active = active;
     }
 }

@@ -112,7 +112,7 @@ public class DbManager {
         });
     }
     public static void createNewSubscription(Subscription subscription, FirebaseTask<Void> firebaseTask){
-        getmRef().document("subscriptions/"+subscription.getsId()).set(subscription)
+        getUserRef().collection("subscriptions").document(subscription.getsId()).set(subscription)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -126,8 +126,7 @@ public class DbManager {
         });
     }
     public static void getSubscriptionOfCurrentUser(FirebaseTask<Subscription> subscriptionFirebaseTask){
-        getmRef().collection("subscriptions")
-                .whereEqualTo("uId", getUid())
+        getUserRef().collection("subscriptions")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
