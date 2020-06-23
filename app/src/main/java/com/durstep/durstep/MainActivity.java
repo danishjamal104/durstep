@@ -1,10 +1,12 @@
 package com.durstep.durstep;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -14,6 +16,8 @@ import com.durstep.durstep.fragment.home.HomeFragment;
 import com.durstep.durstep.fragment.ProfileFragment;
 import com.durstep.durstep.fragment.QrFragment;
 import com.durstep.durstep.fragment.StatsFragment;
+import com.durstep.durstep.helper.NotifyManager;
+import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.manager.TokenManager;
 import com.durstep.durstep.model.AppMode;
@@ -42,7 +46,17 @@ public class MainActivity extends BaseActivity {
         }else {
             startActivity(new Intent(this, SplashActivity.class));
         }
+
+        test();
+
     }
+    void test(){
+        String to = "X1XXmSzO1PVgRcDU69j9F8PLi1V2";
+        String title = "Device Test";
+        String msg = "Testing notification from device to device using volley";
+        NotifyManager.send(this, to, title, msg);
+    }
+
     void init(){
         TokenManager.handle(this);
         appMode = AppMode.getAppMode(this);
@@ -118,4 +132,5 @@ public class MainActivity extends BaseActivity {
         currentSelected.getCompoundDrawables()[1].setTint(getResources().getColor(R.color.menu_item_selected));
         currentSelected.setTextColor(getResources().getColor(R.color.menu_item_selected));
     }
+
 }

@@ -47,15 +47,17 @@ functions.firestore.document('active_delivery/{distributorId}')
 
     return admin.firestore().doc(`user/${dt.id}`).get()
     .then((distData) => {
-        const distributor = distData.data()
+        //const distributor = distData.data()
 
         const subs_promises: any = []
 
-        ad.subscription_list.array.forEach((element: admin.firestore.DocumentReference) => {
+        const subs_list: Array<admin.firestore.DocumentReference> = ad?.subscription_list
+
+        subs_list.forEach(element => {
             subs_promises.push(
                 element.update('active', ref)
             )
-        });
+        })
 
         return Promise.all(subs_promises)
         
