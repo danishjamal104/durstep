@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.Distributor_HomeFragment">
+    tools:context=".fragment.home.Distributor_HomeFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/dist_home_deliveryCard_cv"
@@ -29,7 +29,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary"
                 android:layout_centerInParent="true"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <LinearLayout
                 android:id="@+id/dist_home_deliveryDetailContainer_ll"
@@ -37,7 +37,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginStart="16dp"
-                android:layout_centerVertical="true">
+                android:layout_centerVertical="true"
+                android:visibility="gone">
                 <TextView
                     android:id="@+id/dist_home_total_tv"
                     android:layout_width="wrap_content"
@@ -74,9 +75,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
                 android:text="@string/update"
-                android:layout_marginEnd="32dp"/>
+                android:layout_marginEnd="32dp"
+                android:visibility="gone"/>
 
             <TextView
+                android:id="@+id/dist_home_delivery_location_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -85,7 +88,8 @@
                 android:layout_marginEnd="12dp"
                 android:layout_marginTop="12dp"
                 android:fontFamily="@font/roboto_bold_italic"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/colorPrimary"
+                android:visibility="gone"/>
 
             <com.github.ybq.android.spinkit.SpinKitView
                 android:id="@+id/login_progress_pb"

@@ -13,6 +13,11 @@
     <color name="grey">#808080</color>
 
     <color name="box_outline">#00796B</color>
-
+    <color name="transparent">#00000000</color>
     <color name="hyperlink_color">#0645AD</color>
+
+    <color name="user_client">#DC0645AD</color>
+    <color name="user_distributor">#009688</color>
+    <color name="user_client_light">#700645AD</color>
+    <color name="user_distributor_light">#77009688</color>
 </resources>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    android:layout_marginTop="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/user_list_item_topCard_cv"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+            <RelativeLayout
+                android:id="@+id/user_list_item_topContainer_rl"
+                android:layout_width="match_parent"
+                android:layout_height="100dp">
+
+                <ImageButton
+                    android:id="@+id/user_list_item_typeIllustration_iv"
+                    android:layout_width="32dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:background="@color/user_distributor"
+                    android:rotation="180"/>
+                <RelativeLayout
+                    android:id="@+id/user_list_item_orderContainer_rl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleX="0.5"
+                    android:scaleY="0.5"
+                    android:layout_centerVertical="true">
+
+                    <ImageView
+                        android:id="@+id/user_list_item_numberContainer_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/circle_black"
+                        android:contentDescription="@string/order"/>
+
+                    <TextView
+                        android:id="@+id/user_list_item_totalOrderNumber_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="60"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="28sp"
+                        android:fontFamily="@font/roboto_regular"
+                        android:layout_centerInParent="true"/>
+
+                </RelativeLayout>
+                <TextView
+                    android:id="@+id/user_list_item_nameNumber_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:maxLines="2"
+                    android:layout_marginBottom="8dp"
+                    android:layout_toEndOf="@id/user_list_item_orderContainer_rl"
+                    android:fontFamily="@font/roboto_bold"
+                    tools:text="Abhishek\n9856124873"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/user_list_item_subscriptionList_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/subscription_list_item"
+            android:layout_marginEnd="-12dp"
+            android:layout_marginStart="12dp"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:layout_below="@id/user_list_item_topCard_cv"
+            android:visibility="visible"/>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -5,17 +5,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.durstep.durstep.fragment.HomeFragment;
+import com.durstep.durstep.fragment.home.Distributor_HomeFragment;
+import com.durstep.durstep.fragment.home.HomeFragment;
 import com.durstep.durstep.fragment.ProfileFragment;
 import com.durstep.durstep.fragment.QrFragment;
 import com.durstep.durstep.fragment.StatsFragment;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.manager.TokenManager;
+import com.durstep.durstep.model.AppMode;
 import com.durstep.durstep.model.Menu;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -30,6 +31,8 @@ public class MainActivity extends BaseActivity {
 
     FloatingActionButton scan_fab;
 
+    int appMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +45,7 @@ public class MainActivity extends BaseActivity {
     }
     void init(){
         TokenManager.handle(this);
+        appMode = AppMode.getAppMode(this);
         home_tv = findViewById(R.id.main_menu_home_tv);
         stats_tv = findViewById(R.id.main_menu_stats_tv);
         profile_tv = findViewById(R.id.main_menu_profile_tv);
@@ -59,7 +63,13 @@ public class MainActivity extends BaseActivity {
         home_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openFragment(new HomeFragment());
+                if(appMode==AppMode.CLIENT){
+                    openFragment(new HomeFragment());
+                }else if(appMode==AppMode.DISTRIBUTOR){
+                    openFragment(new Distributor_HomeFragment());
+                }else {
+
+                }
                 selectMenu(Menu.HOME);
             }
         });

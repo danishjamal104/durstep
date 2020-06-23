@@ -163,5 +163,13 @@
     <!--distributor home fragment-->
     <string name="no_current_delivery">No Active Delivery\nClick here to start new delivery</string>
     <string name="update">Update</string>
+    <string name="start">Start</string>
+    <string name="total">Total: </string>
+    <string name="pending">Pending: </string>
+    <string name="delivered">Delivered: </string>
+
+    <!--new delivery activity-->
+    <string name="enter_name_or_number_to_search">Enter Name/Number to search</string>
+    <string name="confirm_delivery">Confirm Delivery</string>
 
 </resources>

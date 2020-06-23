@@ -46,7 +46,7 @@ functions.firestore.document('active_delivery/{distributorId}')
     const ref: admin.firestore.DocumentReference = admin.firestore().doc(`active_delivery/${dt.id}`)
 
     return admin.firestore().doc(`user/${dt.id}`).get()
-    .then(distData => {
+    .then((distData) => {
         const distributor = distData.data()
 
         const subs_promises: any = []

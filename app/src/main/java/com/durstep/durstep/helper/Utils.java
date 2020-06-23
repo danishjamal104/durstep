@@ -5,8 +5,11 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.durstep.durstep.manager.DbManager;
+import com.durstep.durstep.model.Subscription;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firestore.v1.DocumentTransform;
@@ -16,9 +19,11 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Utils {
@@ -146,6 +151,19 @@ public class Utils {
         }catch (Exception e){
             return false;
         }
+    }
+
+    public static List<DocumentReference> getSubsRefFromObject(List<Subscription> subscriptions){
+        if(subscriptions==null||subscriptions.size()==0){
+            return null;
+        }
+        List<DocumentReference> result = new ArrayList<>();
+
+        for(Subscription s: subscriptions){
+            result.add(DbManager.getmRef().document("user/"+s.getuId()+"/subscriptions/"+s.getsId()));
+        }
+
+        return result;
     }
 
     public static int getMonthlyRate(double ratePerLitre, double litre){

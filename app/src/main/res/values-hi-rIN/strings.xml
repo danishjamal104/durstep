@@ -113,4 +113,10 @@
     <string name="subs_menu_add_instruction">निर्देश जोड़ें</string>
     <string name="no_current_delivery">कोई सक्रिय वितरण नहीं।\\n नई डिलीवरी शुरू करने के लिए यहां क्लिक करें</string>
     <string name="update">अपडेट</string>
+    <string name="enter_name_or_number_to_search">खोज करने के लिए नाम / संख्या दर्ज करें</string>
+    <string name="confirm_delivery">डिलिवरी की पुष्टि</string>
+    <string name="total">"संपूर्ण: "</string>
+    <string name="pending">"अपूर्ण: "</string>
+    <string name="delivered">"डेलिवृड: "</string>
+    <string name="start">शुरू</string>
 </resources>

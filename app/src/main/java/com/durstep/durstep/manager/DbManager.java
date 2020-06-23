@@ -2,11 +2,14 @@ package com.durstep.durstep.manager;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.durstep.durstep.interfaces.FirebaseTask;
-import com.durstep.durstep.model.AppMode;
+import com.durstep.durstep.interfaces.SubscriptionLoadingTask;
+import com.durstep.durstep.model.ActiveDelivery;
 import com.durstep.durstep.model.Subscription;
 import com.durstep.durstep.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,7 +20,9 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +68,7 @@ public class DbManager {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    getUser(firebaseTask);
+                    getCurrentUser(firebaseTask);
                 }else {
                    firebaseTask.onComplete(false, task.getException().getLocalizedMessage());
                 }
@@ -86,7 +91,7 @@ public class DbManager {
             }
         });
     }
-    public static void getUser(FirebaseTask<User> userFirebaseTask){
+    public static void getCurrentUser(FirebaseTask<User> userFirebaseTask){
         getUserRef().get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -94,6 +99,48 @@ public class DbManager {
                     userFirebaseTask.onSingleDataLoaded(task.getResult().toObject(User.class));
                 }else {
                     userFirebaseTask.onSingleDataLoaded(null);
+                }
+            }
+        });
+    }
+    public static void getAllUser(FirebaseTask<User> firebaseTask){
+        getmRef().collection("user").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    if(task.getResult().getDocuments().size()==0){
+                        firebaseTask.onComplete(true, null);
+                    }else{
+                        List<User> users = new ArrayList<>();
+                        for(DocumentSnapshot snapshot: task.getResult()){
+                            users.add(snapshot.toObject(User.class));
+                        }
+                        firebaseTask.onMultipleDataLoaded(users);
+                    }
+                }else {
+                    firebaseTask.onComplete(false, task.getException().getLocalizedMessage());
+                }
+            }
+        });
+    }
+    public static void getAllUserOfType(int type, FirebaseTask<User> firebaseTask){
+        getmRef().collection("user")
+                .whereEqualTo("type", type)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    if(task.getResult().getDocuments().size()==0){
+                        firebaseTask.onComplete(true, null);
+                    }else{
+                        List<User> users = new ArrayList<>();
+                        for(DocumentSnapshot snapshot: task.getResult()){
+                            users.add(snapshot.toObject(User.class));
+                        }
+                        firebaseTask.onMultipleDataLoaded(users);
+                    }
+                }else {
+                    firebaseTask.onComplete(false, task.getException().getLocalizedMessage());
                 }
             }
         });
@@ -143,6 +190,107 @@ public class DbManager {
                             }
                         }else{
                             subscriptionFirebaseTask.onComplete(false, task.getException().getLocalizedMessage());
+                        }
+                    }
+                });
+    }
+    public static void getSubscription(String uid, FirebaseTask<Subscription> subscriptionFirebaseTask){
+        getmRef().collection("user/"+uid+"/subscriptions").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            if(task.getResult().getDocuments().size()==0){
+                                subscriptionFirebaseTask.onComplete(true, null);
+                            }else{
+                                List<Subscription> subscriptionList = new ArrayList<>();
+                                for(DocumentSnapshot snapshot: task.getResult()){
+                                    subscriptionList.add(snapshot.toObject(Subscription.class));
+                                }
+                                subscriptionFirebaseTask.onMultipleDataLoaded(subscriptionList);
+                            }
+                        }else{
+                            subscriptionFirebaseTask.onComplete(false, task.getException().getLocalizedMessage());
+                        }
+                    }
+                });
+    }
+    public static void getPreviousDeliveryOfDistributor(String id, SubscriptionLoadingTask loadingTask){
+        getmRef().document("user/"+id+"/pd/pd").get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            ActiveDelivery delivery = task.getResult().toObject(ActiveDelivery.class);
+                            getmRef().runTransaction(new Transaction.Function<List<Pair<Subscription, User>>>() {
+                                @Nullable
+                                @Override
+                                public List<Pair<Subscription, User>> apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                                    List<Pair<Subscription, User>> result = new ArrayList<>();
+
+                                    String path = "user/";
+                                    for(DocumentReference reference: delivery.getSubscription_list()){
+                                        Subscription subscription = transaction.get(reference).toObject(Subscription.class);
+                                        User user = transaction.get(DbManager.getmRef().document(path+subscription.getuId())).toObject(User.class);
+                                        result.add(new Pair<>(subscription, user));
+                                    }
+                                    return result;
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<List<Pair<Subscription, User>>>() {
+                                @Override
+                                public void onComplete(@NonNull Task<List<Pair<Subscription, User>>> task) {
+                                    if(task.isSuccessful()){
+                                        loadingTask.onSubscriptionLoaded(task.getResult());
+                                    }else{
+                                        loadingTask.onError(task.getException().getLocalizedMessage());
+                                    }
+                                }
+                            });
+                        }else{
+                            loadingTask.onError(task.getException().getLocalizedMessage());
+                        }
+                    }
+                });
+    }
+    public static void createDelivery(String uId,ActiveDelivery delivery, FirebaseTask<Void> fbTask){
+        getmRef().document("user/"+uId+"/pd/pd").set(delivery)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            fbTask.onComplete(true, null);
+                        }else{
+                            fbTask.onComplete(false, task.getException().getLocalizedMessage());
+                        }
+                    }
+                });
+    }
+    public static void getScheduledDelivery(FirebaseTask<ActiveDelivery> fbTask){
+        getUserRef().collection("pd").document("pd").get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            if(task.getResult().getData()==null){
+                                fbTask.onComplete(true, null);
+                            }else{fbTask.onSingleDataLoaded(task.getResult().toObject(ActiveDelivery.class));}
+                        }else{
+                            fbTask.onComplete(false, task.getException().getLocalizedMessage());
+                        }
+                    }
+                });
+    }
+    public static void getCurrentActiveDelivery(FirebaseTask<ActiveDelivery> fbTask){
+        getmRef().document("active_delivery/"+getUid()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            if(task.getResult().getData()==null){
+                                fbTask.onComplete(true, null);
+                            }else{fbTask.onSingleDataLoaded(task.getResult().toObject(ActiveDelivery.class));}
+                        }else{
+                            fbTask.onComplete(false, task.getException().getLocalizedMessage());
                         }
                     }
                 });

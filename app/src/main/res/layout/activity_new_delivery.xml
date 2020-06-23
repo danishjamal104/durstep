@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewDeliveryActivity">
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/auth_til_theme"
+        android:id="@+id/new_delivery_search_number_name_til"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:hint="@string/enter_name_or_number_to_search"
+        app:endIconMode="clear_text"
+        app:startIconDrawable="@drawable/ic_menu_profile">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/new_delivery_search_number_name_til_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:padding="26dp"
+            android:textSize="16sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/new_delivery_chip_horizontal_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/new_delivery_search_number_name_til">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/new_delivery_selected_subscription_cg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleLine="true"
+           android:padding="16dp">
+
+
+        </com.google.android.material.chip.ChipGroup>
+
+    </HorizontalScrollView>
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/new_delivery_loadPrev_srl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/new_delivery_chip_horizontal_scroll">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/new_delivery_user_list_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/new_delivery_chip_horizontal_scroll"
+            tools:listitem="@layout/expandable_user_list_item"
+            android:layout_marginTop="8dp"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/new_delivery_confirm_mbt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="38dp"
+        android:layout_marginEnd="38dp"
+        android:text="@string/confirm_delivery"/>
+
+</RelativeLayout>

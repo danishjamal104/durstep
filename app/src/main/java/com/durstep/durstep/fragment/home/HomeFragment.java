@@ -1,4 +1,4 @@
-package com.durstep.durstep.fragment;
+package com.durstep.durstep.fragment.home;
 
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
@@ -25,8 +25,10 @@ import com.durstep.durstep.R;
 import com.durstep.durstep.adapter.SubscriptionAdapter;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
+import com.durstep.durstep.interfaces.ListItemClickListener;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.model.Subscription;
+import com.durstep.durstep.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.Timestamp;
@@ -71,7 +73,12 @@ public class HomeFragment extends Fragment {
                 showNewSubscriptionDialog(false);
             }
         });
-        subs_adapter = new SubscriptionAdapter(getContext());
+        subs_adapter = new SubscriptionAdapter(getContext(), new ListItemClickListener<Subscription, User>() {
+            @Override
+            public void onItemClicked(Subscription object1, User object2) {
+
+            }
+        });
         subs_rv.setAdapter(subs_adapter);
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
