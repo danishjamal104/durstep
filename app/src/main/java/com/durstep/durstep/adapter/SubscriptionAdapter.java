@@ -1,7 +1,7 @@
 package com.durstep.durstep.adapter;
 
+import android.app.Activity;
 import android.content.Context;
-import android.icu.lang.UScript;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,9 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.durstep.durstep.R;
+import com.durstep.durstep.helper.TrackDialog;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.ListItemClickListener;
 import com.durstep.durstep.manager.DbManager;
+import com.durstep.durstep.model.AppMode;
 import com.durstep.durstep.model.Subscription;
 import com.durstep.durstep.model.User;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,19 +31,22 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
 
     List<Subscription> subscriptionList;
     Context context;
+    Activity activity;
 
     ListItemClickListener<Subscription, User> subscriptionListItemClickListener;
 
     public SubscriptionAdapter(List<Subscription> subscriptionList, Context context, ListItemClickListener<Subscription, User> subscriptionListItemClickListener ) {
         this.subscriptionList = subscriptionList;
+        //this.activity = activity;
         this.context = context;
         this.subscriptionListItemClickListener = subscriptionListItemClickListener;
     }
 
-    public SubscriptionAdapter(Context context,  ListItemClickListener<Subscription, User> subscriptionListItemClickListener) {
+    public SubscriptionAdapter(Activity activity, Context context,  ListItemClickListener<Subscription, User> subscriptionListItemClickListener) {
         subscriptionList = new ArrayList<>();
         this.subscriptionListItemClickListener = subscriptionListItemClickListener;
         this.context = context;
+        this.activity = activity;
     }
 
     @NonNull
@@ -75,6 +80,9 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         holder.menu_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(AppMode.getAppMode(context)!=AppMode.CLIENT){
+                    return;
+                }
 
                 PopupMenu menu = new PopupMenu(context, holder.menu_fab);
                 menu.inflate(R.menu.subs_item_menu);
@@ -87,6 +95,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
                                 break;
                             case R.id.subs_menu_track:
                                 Utils.log("Track");
+                                TrackDialog trackDialog = new TrackDialog(context, activity, subscription);
                                 break;
                         }
                         return false;

@@ -119,4 +119,6 @@
     <string name="pending">"अपूर्ण: "</string>
     <string name="delivered">"डेलिवृड: "</string>
     <string name="start">शुरू</string>
+    <string name="track_inactive_message">प्रसव रास्ते पर नहीं</string>
+    <string name="track_info">ट्रैक जानकारी</string>
 </resources>

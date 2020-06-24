@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
                 showNewSubscriptionDialog(false);
             }
         });
-        subs_adapter = new SubscriptionAdapter(getContext(), new ListItemClickListener<Subscription, User>() {
+        subs_adapter = new SubscriptionAdapter(getActivity(), getContext(), new ListItemClickListener<Subscription, User>() {
             @Override
             public void onItemClicked(Subscription object1, User object2) {
 
@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
     }
     void loadSubscriptions(){
         refreshLayout.setRefreshing(true);
-        DbManager.getSubscriptionOfCurrentUser(new FirebaseTask<Subscription>() {
+        DbManager.getAllSubscriptionOfCurrentUser(new FirebaseTask<Subscription>() {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if(isSuccess){

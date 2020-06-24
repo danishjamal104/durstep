@@ -2,6 +2,7 @@ package com.durstep.durstep.helper;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,6 +30,8 @@ import java.util.Map;
 public class Utils {
 
     public final static String ADMIN_ID = "ZXCfMorVsyXZUS4oLLHy08T1Hwn2";
+
+    public final static int LOCATION_PERMISSION_CODE = 372;
 
     public static boolean isValidNumber(int number){
         return isValidNumber(""+number);
@@ -124,6 +127,34 @@ public class Utils {
         // subsRef = user/{id}/subscription/{sId}
         String[] paths = subsRef.getPath().split("/");
         return (paths[1]);
+    }
+
+    public static float calculateDistance(GeoPoint p1, GeoPoint p2){
+        Location locationA = new Location("point A");
+        locationA.setLatitude(p1.getLatitude());
+        locationA.setLongitude(p1.getLongitude());
+
+        Location locationB = new Location("point B");
+        locationB.setLatitude(p2.getLatitude());
+        locationB.setLongitude(p2.getLongitude());
+
+        return locationA.distanceTo(locationB);
+    }
+
+    public static double meterDistanceBetweenPoints(float lat_a, float lng_a, float lat_b, float lng_b) {
+        float pk = (float) (180.f/Math.PI);
+
+        float a1 = lat_a / pk;
+        float a2 = lng_a / pk;
+        float b1 = lat_b / pk;
+        float b2 = lng_b / pk;
+
+        double t1 = Math.cos(a1) * Math.cos(a2) * Math.cos(b1) * Math.cos(b2);
+        double t2 = Math.cos(a1) * Math.sin(a2) * Math.cos(b1) * Math.sin(b2);
+        double t3 = Math.sin(a1) * Math.sin(b1);
+        double tt = Math.acos(t1 + t2 + t3);
+
+        return 6366000 * tt;
     }
 
     public static void customTimestamp(){

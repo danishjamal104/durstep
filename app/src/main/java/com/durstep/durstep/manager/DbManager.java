@@ -175,7 +175,7 @@ public class DbManager {
             }
         });
     }
-    public static void getSubscriptionOfCurrentUser(FirebaseTask<Subscription> subscriptionFirebaseTask){
+    public static void getAllSubscriptionOfCurrentUser(FirebaseTask<Subscription> subscriptionFirebaseTask){
         getUserRef().collection("subscriptions")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -196,6 +196,20 @@ public class DbManager {
                         }
                     }
                 });
+    }
+    public static void getSubscriptionOfCurrentUser(String sId, FirebaseTask<Subscription> fbTask){
+        getUserRef().collection("subscriptions").document(sId)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    fbTask.onSingleDataLoaded(task.getResult().toObject(Subscription.class));
+                }else{
+                    fbTask.onComplete(false, task.getException().getLocalizedMessage());
+                }
+            }
+        });
+
     }
     public static void getSubscription(String uid, FirebaseTask<Subscription> subscriptionFirebaseTask){
         getmRef().collection("user/"+uid+"/subscriptions").get()
@@ -320,6 +334,20 @@ public class DbManager {
                     fbTask.onComplete(true, null);
                 }else {
                     fbTask.onComplete(false, null);
+                }
+            }
+        });
+    }
+
+    public static void getDeliveryLocation(DocumentReference reference, FirebaseTask<GeoPoint> fbTask){
+        reference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    GeoPoint geoPoint = task.getResult().getGeoPoint("location");
+                    fbTask.onSingleDataLoaded(geoPoint);
+                }else{
+                    fbTask.onComplete(false, task.getException().getLocalizedMessage());
                 }
             }
         });

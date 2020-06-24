@@ -160,6 +160,9 @@
     <string name="subs_menu_track">Track</string>
     <string name="subs_menu_add_instruction">Add Instruction</string>
 
+    <string name="track_inactive_message">Delivery not on way</string>
+    <string name="track_info">Track info</string>
+
     <!--distributor home fragment-->
     <string name="no_current_delivery">No Active Delivery\nClick here to start new delivery</string>
     <string name="update">Update</string>
