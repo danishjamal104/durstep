@@ -18,12 +18,11 @@
         app:startIconDrawable="@drawable/ic_phone_black">
 
         <com.google.android.material.textfield.TextInputEditText
+            style="@style/auth_til_et_theme"
             android:id="@+id/login_number_til_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberSigned"
-            android:padding="26dp"
-            android:textSize="16sp" />
+            android:inputType="numberSigned" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -38,12 +37,12 @@
         app:startIconDrawable="@drawable/ic_pwd">
 
         <com.google.android.material.textfield.TextInputEditText
+            style="@style/auth_til_et_theme"
             android:id="@+id/login_password_til_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:padding="26dp"
-            android:textSize="16sp" />
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
 

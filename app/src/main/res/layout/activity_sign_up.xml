@@ -12,18 +12,17 @@
         style="@style/auth_til_theme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="112dp"
         android:hint="@string/name"
         app:endIconMode="clear_text"
         app:startIconDrawable="@drawable/ic_menu_profile">
 
         <com.google.android.material.textfield.TextInputEditText
+            style="@style/auth_til_et_theme"
             android:id="@+id/signUp_name_til_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:padding="26dp"
-            android:textSize="16sp" />
+            android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -37,12 +36,12 @@
         app:startIconDrawable="@drawable/ic_phone_black">
 
         <com.google.android.material.textfield.TextInputEditText
+            style="@style/auth_til_et_theme"
             android:id="@+id/signUp_number_til_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberSigned"
-            android:padding="26dp"
-            android:textSize="16sp" />
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -57,12 +56,12 @@
         app:startIconDrawable="@drawable/ic_pwd">
 
         <com.google.android.material.textfield.TextInputEditText
+            style="@style/auth_til_et_theme"
             android:id="@+id/signUp_password_til_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:padding="26dp"
-            android:textSize="16sp" />
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -76,12 +75,12 @@
         app:startIconDrawable="@drawable/ic_pwd">
 
         <com.google.android.material.textfield.TextInputEditText
+            style="@style/auth_til_et_theme"
             android:id="@+id/signUp_confirmPassword_til_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:padding="26dp"
-            android:textSize="16sp" />
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -102,7 +101,7 @@
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
         android:paddingStart="32dp"
-        android:paddingTop="16dp"
+        android:paddingTop="8dp"
         android:paddingEnd="32dp"
         android:paddingBottom="32dp">
 

@@ -24,6 +24,11 @@
         <item name="hintTextColor">@color/colorPrimary</item>
     </style>
 
+    <style name="auth_til_et_theme" parent="Widget.AppCompat.EditText">
+        <item name="android:padding">18dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="auth_button_theme" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">@color/white</item>
         <item name="backgroundTint">@color/colorPrimary</item>
