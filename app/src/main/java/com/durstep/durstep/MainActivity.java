@@ -47,16 +47,7 @@ public class MainActivity extends BaseActivity {
             startActivity(new Intent(this, SplashActivity.class));
         }
 
-        test();
-
     }
-    void test(){
-        String to = "X1XXmSzO1PVgRcDU69j9F8PLi1V2";
-        String title = "Device Test";
-        String msg = "Testing notification from device to device using volley";
-        NotifyManager.send(this, to, title, msg);
-    }
-
     void init(){
         TokenManager.handle(this);
         appMode = AppMode.getAppMode(this);

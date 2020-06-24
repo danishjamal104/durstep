@@ -15,6 +15,7 @@ import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.manager.TokenManager;
+import com.durstep.durstep.manager.UserManager;
 import com.durstep.durstep.model.AppMode;
 import com.durstep.durstep.model.User;
 import com.google.android.material.button.MaterialButton;
@@ -94,6 +95,7 @@ public class LoginActivity extends BaseActivity {
                 }else{
                     TokenManager.handleOnLoginSignUp(LoginActivity.this);
                     AppMode.updateAppMode(LoginActivity.this, object.getType());
+                    UserManager.setUser(LoginActivity.this, object);
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finishAffinity();
                 }

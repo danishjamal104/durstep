@@ -24,19 +24,23 @@ import android.widget.TextView;
 
 import com.durstep.durstep.NewDeliveryActivity;
 import com.durstep.durstep.R;
+import com.durstep.durstep.helper.NotifyManager;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.interfaces.LocationUpdateListener;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.model.ActiveDelivery;
+import com.durstep.durstep.model.Subscription;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Distributor_HomeFragment extends Fragment {
@@ -164,6 +168,7 @@ public class Distributor_HomeFragment extends Fragment {
                     public void onComplete(boolean isSuccess, String error) {
                         if(isSuccess){
                             setBtUpdateMode();
+                            notifyOnStartDelivery();
                             getCurrentActiveDelivery();
                         }else{
                             Utils.longToast(getContext(), error);
@@ -206,6 +211,15 @@ public class Distributor_HomeFragment extends Fragment {
             }
         });
     }
+
+    void notifyOnStartDelivery(){
+        List<String> to = new ArrayList<>();
+        for(DocumentReference reference: activeDelivery.getSubscription_list()){
+            to.add(Utils.getUserIdFromSubscriptionRef(reference));
+        }
+        NotifyManager.sendDeliveryStartNotification(getContext(), to);
+    }
+
 
     void updateLocation(LocationUpdateListener listener) {
         FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(getContext());

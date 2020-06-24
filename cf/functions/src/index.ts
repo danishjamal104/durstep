@@ -1,26 +1,21 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
 //import * as nodemailer from 'nodemailer';
 //import * as cors from 'cors';
 admin.initializeApp()
-
 export const notify = 
 functions.https.onRequest((req, res)=>{
-    
     //https://us-central1-durstep-7e7a8.cloudfunctions.net/notify?to=gre4OYbgiEZb5StRpOAldyVoZwD2&title=HttpText&msg=Hello
-
     const to = ""+req.query.to
     const title= ""+req.query.title
     const message = ""+req.query.msg
-
     admin.firestore().doc(`user/${to}`).get()
     .then(ud => {
         const push_token = ud.data()?.push_token
-
         if(push_token===null){
             return res.send("No token found");
         }
-
         const payload = {
             token: push_token,
             notification: {
@@ -33,56 +28,83 @@ functions.https.onRequest((req, res)=>{
             return res.send('Send')
         })
         .catch((error) => {return res.send(error)})
-
     }).catch((error) => {return res.send(error)})
-
 })
-
 export const onNewDeliveryCreated = 
 functions.firestore.document('active_delivery/{distributorId}')
 .onCreate(dt => {
     const ad = dt.data()
-
-    const ref: admin.firestore.DocumentReference = admin.firestore().doc(`active_delivery/${dt.id}`)
-
+    const ref: admin.firestore.DocumentReference = 
+    admin.firestore().doc(`active_delivery/${dt.id}`)
     return admin.firestore().doc(`user/${dt.id}`).get()
     .then((distData) => {
         //const distributor = distData.data()
-
         const subs_promises: any = []
-
         const subs_list: Array<admin.firestore.DocumentReference> = ad?.subscription_list
-
         subs_list.forEach(element => {
             subs_promises.push(
                 element.update('active', ref)
             )
         })
-
         return Promise.all(subs_promises)
-        
     }).catch(error => console.log(error))
 })
-
+export const onLocationUpdate = 
+functions.firestore.document('active_delivery/{distributorId}')
+.onUpdate(dt => {
+    const after = dt.after.data()
+    const before = dt.before.data()
+    const old_loc: admin.firestore.GeoPoint = before.location
+    const new_loc: admin.firestore.GeoPoint = after.location
+    if(old_loc.latitude===new_loc.latitude && old_loc.longitude===new_loc.longitude){
+        return;
+    }
+    const user_promises: Promise<DocumentSnapshot>[] = []
+    const subs_list: Array<admin.firestore.DocumentReference> = after?.subscription_list
+    subs_list.forEach(elm => {
+        const uid = elm.path.split('/')[1]
+        user_promises.push(
+            admin.firestore().doc(`user/${uid}`).get()
+        )
+    })
+    return Promise.all(user_promises)
+    .then(snapshots => {
+        const msg_promises: Promise<string>[]  = []
+        snapshots.forEach(snapshot => {
+            const push_token = snapshot.data()?.push_token
+            if(push_token!=null){
+                const payload = {
+                    token: push_token,
+                    notification: {
+                          title: 'Delivery Update',
+                          body: 'Location updated. Click here to track'
+                        }
+                    }
+                msg_promises.push(admin.messaging().send(payload))
+            }
+        })
+        if(msg_promises.length==0){
+            return;
+        }
+        return Promise.all(msg_promises)
+        .catch(error => console.log(error))
+    }).catch(error => console.log(error))
+})
 export const exceptNewDelivery = 
 functions.firestore.document('delivery/{dId}')
 .onCreate(dt => {
     const delivery = dt.data()
-
     const order = {
         to: delivery?.to,
         from: admin.firestore().doc(`user/${delivery?.active.id}`),
         amount: delivery?.amount,
         time: delivery?.time
     }
-
     return admin.firestore().collection(`orders/${dt.id}`).add(order)
     .then(() => {
         const promises:any = []
-
         promises.push(delivery?.subRef.update('active', null))
         promises.push(admin.firestore().doc(`delivery/${dt.id}`).delete())
-
         return Promise.all(promises)
         .then(() => {
             return delivery?.active.update({

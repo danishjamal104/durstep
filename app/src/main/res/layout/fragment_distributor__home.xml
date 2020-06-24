@@ -29,7 +29,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary"
                 android:layout_centerInParent="true"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/dist_home_deliveryDetailContainer_ll"

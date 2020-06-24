@@ -120,6 +120,12 @@ public class Utils {
         return email.split("@")[0];
     }
 
+    public static String getUserIdFromSubscriptionRef(DocumentReference subsRef){
+        // subsRef = user/{id}/subscription/{sId}
+        String[] paths = subsRef.getPath().split("/");
+        return (paths[1]);
+    }
+
     public static void customTimestamp(){
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date);

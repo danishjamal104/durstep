@@ -15,6 +15,8 @@ import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.manager.TokenManager;
+import com.durstep.durstep.manager.UserManager;
+import com.durstep.durstep.model.AppMode;
 import com.durstep.durstep.model.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -77,6 +79,8 @@ public class SignUpActivity extends BaseActivity {
             public void onComplete(boolean isSuccess, String error) {
                 if(isSuccess){
                     TokenManager.handleOnLoginSignUp(SignUpActivity.this);
+                    AppMode.updateAppMode(SignUpActivity.this, AppMode.CLIENT);
+                    UserManager.setUser(SignUpActivity.this, user);
                     startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                     finishAffinity();
                 }else{

@@ -26,6 +26,7 @@ public class User {
     int type = 0;
     int totalOrder = 0;
     String uid;
+    String push_token;
 
     // below are the fields used for subscription list in expandable format
     @Exclude
@@ -89,6 +90,14 @@ public class User {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getPush_token() {
+        return push_token;
+    }
+
+    public void setPush_token(String push_token) {
+        this.push_token = push_token;
     }
 
     @Exclude
