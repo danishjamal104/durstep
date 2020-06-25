@@ -1,12 +1,10 @@
 package com.durstep.durstep.fragment.home;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationProvider;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,13 +22,12 @@ import android.widget.TextView;
 
 import com.durstep.durstep.NewDeliveryActivity;
 import com.durstep.durstep.R;
-import com.durstep.durstep.helper.NotifyManager;
+import com.durstep.durstep.manager.NotifyManager;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.interfaces.LocationUpdateListener;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.model.ActiveDelivery;
-import com.durstep.durstep.model.Subscription;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -194,6 +191,7 @@ public class Distributor_HomeFragment extends Fragment {
                     public void onComplete(boolean isSuccess, String error) {
                         if(isSuccess){
                             Utils.toast(getContext(), getString(R.string.success));
+                            NotifyManager.sendLocationUpdate(getContext(), activeDelivery);
                             getCurrentActiveDelivery();
                         }else{
                             Utils.longToast(getContext(), error);

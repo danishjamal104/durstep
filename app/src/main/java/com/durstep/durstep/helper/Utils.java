@@ -32,6 +32,10 @@ public class Utils {
     public final static String ADMIN_ID = "ZXCfMorVsyXZUS4oLLHy08T1Hwn2";
 
     public final static int LOCATION_PERMISSION_CODE = 372;
+    public final static double[] available_pack = {0.5,1,1.5,2,2.5,3,3.5,4,4.5,5};
+
+    public final static String ORDER_RECEIVE_URL = "https://us-central1-durstep-7e7a8.cloudfunctions.net/scan?to=%s&l=%s";
+    public final static String NOTIFICATION_URL = "https://us-central1-durstep-7e7a8.cloudfunctions.net/notify?to=%s&title=%s&msg=%s&type=%s";
 
     public static boolean isValidNumber(int number){
         return isValidNumber(""+number);
@@ -92,6 +96,23 @@ public class Utils {
     public static String getDate(com.google.firebase.Timestamp timestamp){
         SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
         return sfd.format(timestamp.toDate());
+    }
+
+    public static boolean isValidLitre(String s){
+        boolean res = false;
+        double l;
+        try{
+            l = Double.parseDouble(s);
+        }catch (Exception e){
+            return res;
+        }
+        for(int i=0; i<available_pack.length; i++){
+            if(l == available_pack[i]){
+                res = true;
+                break;
+            }
+        }
+        return res;
     }
 
     public static String formatTime(int hoursOfDay, int minute){

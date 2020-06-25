@@ -20,7 +20,6 @@ import com.durstep.durstep.fragment.home.HomeFragment;
 import com.durstep.durstep.fragment.ProfileFragment;
 import com.durstep.durstep.fragment.QrFragment;
 import com.durstep.durstep.fragment.StatsFragment;
-import com.durstep.durstep.helper.NotifyManager;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.LocationUpdateListener;
 import com.durstep.durstep.manager.DbManager;
