@@ -121,4 +121,20 @@
     <string name="start">शुरू</string>
     <string name="track_inactive_message">प्रसव रास्ते पर नहीं</string>
     <string name="track_info">ट्रैक जानकारी</string>
+    <string name="order_date">"तारीख: "</string>
+    <string name="total_consumption">सेवन</string>
+    <string name="total_amount_due">देय राशि</string>
+    <string name="total_amount_paid">भुगतान की गई राशि</string>
+    <string name="jan">जनवरी</string>
+    <string name="feb">फरवरी</string>
+    <string name="mar">मार्च</string>
+    <string name="apr">अप्रैल</string>
+    <string name="may">मई</string>
+    <string name="jun">जून</string>
+    <string name="jul">जुलाई</string>
+    <string name="aug">अगस्त</string>
+    <string name="sep">सितंबर</string>
+    <string name="oct">अक्टूबर</string>
+    <string name="nov">नवंबर</string>
+    <string name="dec">दिसंबर</string>
 </resources>

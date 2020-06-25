@@ -7,13 +7,17 @@ import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
+import com.durstep.durstep.interfaces.OrderLoadingTask;
 import com.durstep.durstep.interfaces.SubscriptionLoadingTask;
 import com.durstep.durstep.model.ActiveDelivery;
+import com.durstep.durstep.model.Order;
 import com.durstep.durstep.model.Subscription;
 import com.durstep.durstep.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -26,7 +30,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class DbManager {
 
@@ -336,6 +342,57 @@ public class DbManager {
             }
         });
     }
+
+    public static void loadMonthOrder(String uid, OrderLoadingTask orderLoadingTask, String month){
+        String doc_name;
+        if(month!=null){
+            doc_name = String.format("%s_%s", month, Utils.getDateTimeInFormat(new Timestamp(new Date()), "yyyy"));
+        }else{
+            doc_name = Utils.getDateTimeInFormat(new Timestamp(new Date()), "MMM_yyyy").toUpperCase();
+        }
+        getmRef().document(String.format("user/%s/stats/%s", uid, doc_name)).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            Map<String, Object> data = task.getResult().getData();
+                            if(data==null){
+                                orderLoadingTask.onComplete(true, null);
+                            }else {
+                                orderLoadingTask.onMetaDataLoaded(data);
+                                List<DocumentReference> ordersRef = (List<DocumentReference>) data.get("orders");
+                                if(ordersRef.size()==0){
+                                    orderLoadingTask.onComplete(true, null);
+                                    return;
+                                }
+                                getmRef().runTransaction(new Transaction.Function<List<Order>>() {
+                                    @Nullable
+                                    @Override
+                                    public List<Order> apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                                        List<Order> orders = new ArrayList<>();
+                                        for(DocumentReference oRef: ordersRef){
+                                            orders.add(transaction.get(oRef).toObject(Order.class));
+                                        }
+                                        return orders;
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<List<Order>>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<List<Order>> task) {
+                                        if(task.isSuccessful()){
+                                            orderLoadingTask.onOrdersLoaded(task.getResult());
+                                        }else{
+                                            orderLoadingTask.onComplete(false, task.getException().getLocalizedMessage());
+                                        }
+                                    }
+                                });
+                            }
+                        }else{
+                            orderLoadingTask.onComplete(false, task.getException().getLocalizedMessage());
+                        }
+                    }
+                });
+    }
+
 
     public static void getDeliveryLocation(DocumentReference reference, FirebaseTask<GeoPoint> fbTask){
         reference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

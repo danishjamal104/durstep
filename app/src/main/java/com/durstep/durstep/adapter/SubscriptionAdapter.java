@@ -61,7 +61,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         holder.litre_tv.setText(""+subscription.getAmount()+" "+context.getString(R.string.litre_abbreviation));
         holder.deliveryTime_tv.setText(context.getString(R.string.subs_delivery_time)+subscription.getDeliveryTime());
         holder.monthly_tv.setText(context.getString(R.string.subs_monthly_rate)+" ");
-        DbManager.getmRef().document("subscriptions/meta-data").get()
+        DbManager.getmRef().document("admin/meta-data").get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {

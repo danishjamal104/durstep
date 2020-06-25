@@ -89,6 +89,7 @@
     <!--detail view of order-->
     <string name="order_by">By: </string>
     <string name="order_time">Time: </string>
+    <string name="order_date">Date: </string>
     <string name="order_id">Id: </string>
     <string name="order_status">Status: </string>
     <string name="order_amount">Amount: </string>
@@ -175,4 +176,22 @@
     <string name="enter_name_or_number_to_search">Enter Name/Number to search</string>
     <string name="confirm_delivery">Confirm Delivery</string>
 
+    <!--stats fragment-->
+    <string name="total_consumption">Consumption</string>
+    <string name="total_amount_due">Amount Due</string>
+    <string name="total_amount_paid">Amount Paid</string>
+
+    <!--month-->
+    <string name="jan">January</string>
+    <string name="feb">February</string>
+    <string name="mar">March</string>
+    <string name="apr">April</string>
+    <string name="may">May</string>
+    <string name="jun">June</string>
+    <string name="jul">July</string>
+    <string name="aug">August</string>
+    <string name="sep">September</string>
+    <string name="oct">October</string>
+    <string name="nov">November</string>
+    <string name="dec">December</string>
 </resources>

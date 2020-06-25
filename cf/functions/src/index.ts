@@ -36,25 +36,6 @@ functions.https.onRequest((req, res)=>{
         .catch((error) => {return res.send(error)})
     }).catch((error) => {return res.send(error)})
 })
-export const onNewDeliveryCreated = 
-functions.firestore.document('active_delivery/{distributorId}')
-.onCreate(dt => {
-    const ad = dt.data()
-    const ref: admin.firestore.DocumentReference = 
-    admin.firestore().doc(`active_delivery/${dt.id}`)
-    return admin.firestore().doc(`user/${dt.id}`).get()
-    .then((distData) => {
-        //const distributor = distData.data()
-        const subs_promises: any = []
-        const subs_list: Array<admin.firestore.DocumentReference> = ad?.subscription_list
-        subs_list.forEach(element => {
-            subs_promises.push(
-                element.update('active', ref)
-            )
-        })
-        return Promise.all(subs_promises)
-    }).catch(error => console.log(error))
-})
 export const scan = 
 functions.https.onRequest((req, res) => {
 //https://us-central1-durstep-7e7a8.cloudfunctions.net/scan?to=
@@ -137,46 +118,48 @@ functions.https.onRequest((req, res) => {
         }).catch((e) => {return res.send({status: 404,msg: 'Delivery Not Found!!',data: e})})
     }).catch((e) => {return res.send({status: 404,msg: 'Invalid User!!',data: e})})
 })
-/*
-export const onLocationUpdate = 
+export const onNewDeliveryCreated = 
 functions.firestore.document('active_delivery/{distributorId}')
-.onUpdate(dt => {
-    const after = dt.after.data()
-    const before = dt.before.data()
-    const old_loc: admin.firestore.GeoPoint = before.location
-    const new_loc: admin.firestore.GeoPoint = after.location
-    if(old_loc.latitude===new_loc.latitude && old_loc.longitude===new_loc.longitude){
-        return;
-    }
-    const user_promises: Promise<DocumentSnapshot>[] = []
-    const subs_list: Array<admin.firestore.DocumentReference> = after?.subscription_list
-    subs_list.forEach(elm => {
-        const uid = elm.path.split('/')[1]
-        user_promises.push(
-            admin.firestore().doc(`user/${uid}`).get()
-        )
-    })
-    return Promise.all(user_promises)
-    .then(snapshots => {
-        const msg_promises: Promise<string>[]  = []
-        snapshots.forEach(snapshot => {
-            const push_token = snapshot.data()?.push_token
-            if(push_token!=null){
-                const payload = {
-                    token: push_token,
-                    notification: {
-                          title: 'Delivery Update',
-                          body: 'Location updated. Click here to track'
-                        }
-                    }
-                msg_promises.push(admin.messaging().send(payload))
-            }
+.onCreate(dt => {
+    const ad = dt.data()
+    const ref: admin.firestore.DocumentReference = 
+    admin.firestore().doc(`active_delivery/${dt.id}`)
+    return admin.firestore().doc(`user/${dt.id}`).get()
+    .then((distData) => {
+        //const distributor = distData.data()
+        const subs_promises: any = []
+        const subs_list: Array<admin.firestore.DocumentReference> = ad?.subscription_list
+        subs_list.forEach(element => {
+            subs_promises.push(
+                element.update('active', ref)
+            )
         })
-        if(msg_promises.length==0){
-            return;
-        }
-        return Promise.all(msg_promises)
-        .catch(error => console.log(error))
+        return Promise.all(subs_promises)
     }).catch(error => console.log(error))
 })
-*/
+export const sortOrder = 
+functions.firestore.document('orders/{oId}')
+.onCreate(dt => {
+    const month = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 
+'NOV', 'DEC']
+
+    const order = dt.data()
+    const time: Date = (<admin.firestore.Timestamp>order.time).toDate()
+    
+    const doc_name = month[time.getMonth()]+'_'+time.getFullYear()
+
+    return admin.firestore().doc('admin/meta-data').get()
+    .then(snap => {
+        const rate: number = snap.data()?.rate
+
+        const data = {
+            due: admin.firestore.FieldValue.increment(rate*order.amount),
+            orders: admin.firestore.FieldValue.arrayUnion(dt.ref),
+            amount: admin.firestore.FieldValue.increment(order.amount)
+        }
+
+        return admin.firestore().doc(`user/${order.to}/stats/${doc_name}`)
+        .set(data, {merge: true})
+
+    }).catch((e) => {console.log(e)})
+})

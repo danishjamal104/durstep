@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Utils {
@@ -95,6 +96,14 @@ public class Utils {
     }
     public static String getDate(com.google.firebase.Timestamp timestamp){
         SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
+        return sfd.format(timestamp.toDate());
+    }
+    public static String getTime(com.google.firebase.Timestamp timestamp){
+        SimpleDateFormat sfd = new SimpleDateFormat("hh:mm aa");
+        return sfd.format(timestamp.toDate());
+    }
+    public static String getDateTimeInFormat(Timestamp timestamp, String frm){
+        SimpleDateFormat sfd = new SimpleDateFormat(frm);
         return sfd.format(timestamp.toDate());
     }
 
