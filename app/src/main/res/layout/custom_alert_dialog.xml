@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/dialog_corner_radius"
+    app:cardBackgroundColor="@color/colorPrimaryDark"
+    android:background="@color/transparent"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Title"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"/>
+
+        <TextView
+            android:id="@+id/body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            tools:text="This is demo message for this custom alert dialog"
+            android:textColor="@color/dark_grey"
+            android:textSize="16sp"
+            android:ellipsize="marquee"
+            android:lineSpacingMultiplier="1.5"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="16dp"
+            android:visibility="visible"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til"
+            style="@style/auth_til_theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+            app:endIconMode="clear_text"
+            app:startIconDrawable="@drawable/ic_menu_profile"
+            android:layout_below="@id/title"
+            android:visibility="gone">
+
+        <com.google.android.material.textfield.TextInputEditText
+            style="@style/auth_til_et_theme"
+            android:id="@+id/til_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textColor="@color/grey" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/positive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/body"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/ok"
+            android:fontFamily="@font/roboto_bold"
+            android:letterSpacing="0.05"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:id="@+id/negative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/body"
+            android:layout_toStartOf="@id/positive"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/cancel"
+            android:fontFamily="@font/roboto_bold"
+            android:letterSpacing="0.05"/>
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

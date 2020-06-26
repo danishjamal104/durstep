@@ -107,11 +107,20 @@ functions.https.onRequest((req, res) => {
                     delivered: dt?.delivered+1,
                     location: dt?.location
                 }
-                return adt.ref.update(newDt)
+                let isDeliveryPending = true
+                let promise: any
+                if(newDt.pending==0){
+                    isDeliveryPending = false
+                    promise = adt.ref.delete()
+                }else{
+                    promise = adt.ref.update(newDt)
+                }
+
+                return promise
                 .then(()=>{
                     return admin.firestore().doc(`user/${to}/subscriptions/${active_sub?.sId}`).update('active', null)
                     .then(()=>{
-                        return res.send({status: 200,msg: 'Order Delivered',data: adt.id})
+                        return res.send({status: isDeliveryPending?200:204,msg: 'Order Delivered',data: adt.id})
                     }).catch((e) => {return res.send({status: 404,msg: 'Error Setting Active To Null!!',data: e})})
                 }).catch((e) => {return res.send({status: 404,msg: 'Error Updating Active Delivery!!',data: e})})
             }) .catch((e) => {return res.send({status: 404,msg: 'Error Creating Order!!',data: e})})

@@ -11,6 +11,7 @@
     <color name="white">#fff</color>
     <color name="black">#000</color>
     <color name="grey">#808080</color>
+    <color name="dark_grey">#434343</color>
 
     <color name="box_outline">#00796B</color>
     <color name="transparent">#00000000</color>

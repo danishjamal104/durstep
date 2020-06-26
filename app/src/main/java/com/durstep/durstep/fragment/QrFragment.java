@@ -167,4 +167,6 @@ public class QrFragment extends Fragment {
     public void onStart() {
         super.onStart();
     }
+
+
 }

@@ -6,4 +6,9 @@
     <dimen name="login_signUp_button_height">58dp</dimen>
     <dimen name="login_signUp_button_width">100dp</dimen>
     <dimen name="login_signUp_button_textSize">16sp</dimen>
+
+    <!--custom alert dialog-->
+    <dimen name="dialog_height">200dp</dimen>
+    <dimen name="dialog_width">350dp</dimen>
+    <dimen name="dialog_corner_radius">10dp</dimen>
 </resources>

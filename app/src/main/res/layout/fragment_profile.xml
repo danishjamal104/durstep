@@ -1,14 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/profile_name_til"
+        style="@style/auth_til_theme"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/bt_profile" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="112dp"
+        android:hint="@string/name"
+        app:endIconMode="clear_text"
+        app:startIconDrawable="@drawable/ic_menu_profile">
 
-</FrameLayout>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/profile_name_til_et"
+            style="@style/auth_til_et_theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/profile_number_til"
+        style="@style/auth_til_theme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_name_til"
+        android:hint="@string/login_username_hint"
+        app:endIconMode="clear_text"
+        app:startIconDrawable="@drawable/ic_phone_black">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/profile_number_til_et"
+            style="@style/auth_til_et_theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberSigned" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/profile_password_til"
+        style="@style/auth_til_theme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_number_til"
+        android:layout_centerInParent="true"
+        android:hint="@string/profile_new_password"
+        android:visibility="gone"
+        app:endIconMode="password_toggle"
+        app:startIconDrawable="@drawable/ic_pwd">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signUp_password_til_et"
+            style="@style/auth_til_et_theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/profile_confirmPassword_til"
+        style="@style/auth_til_theme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_password_til"
+        android:hint="@string/profile_new_password"
+        android:visibility="gone"
+        app:endIconMode="password_toggle"
+        app:startIconDrawable="@drawable/ic_pwd">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signUp_confirmPassword_til_et"
+            style="@style/auth_til_et_theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_confirmPassword_til"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp">
+        <TextView
+            android:id="@+id/profile_edit_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/edit"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:gravity="center_vertical"/>
+        <com.google.android.material.button.MaterialButton
+            style="@style/auth_button_theme"
+            android:id="@+id/profile_update_btn"
+            android:layout_width="@dimen/login_signUp_button_width"
+            android:layout_height="@dimen/login_signUp_button_height"
+            android:text="@string/update"
+            android:visibility="gone"
+            android:layout_marginStart="32dp"/>
+
+    </LinearLayout>
+
+
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/profile_progress_pb"
+        style="@style/SpinKitView.Large.MultiplePulse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:SpinKit_Color="@color/grey" />
+
+
+</RelativeLayout>
