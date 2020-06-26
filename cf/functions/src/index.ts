@@ -164,7 +164,7 @@ functions.firestore.document('orders/{oId}')
         const data = {
             due: admin.firestore.FieldValue.increment(rate*order.amount),
             orders: admin.firestore.FieldValue.arrayUnion(dt.ref),
-            amount: admin.firestore.FieldValue.increment(order.amount)
+            consumption: admin.firestore.FieldValue.increment(order.amount)
         }
 
         return admin.firestore().doc(`user/${order.to}/stats/${doc_name}`)

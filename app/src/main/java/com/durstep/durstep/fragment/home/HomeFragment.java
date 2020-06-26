@@ -17,15 +17,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.durstep.durstep.R;
 import com.durstep.durstep.adapter.SubscriptionAdapter;
+import com.durstep.durstep.helper.TrackDialog;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.interfaces.ListItemClickListener;
+import com.durstep.durstep.interfaces.SubsMenuClickListener;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.model.Subscription;
 import com.durstep.durstep.model.User;
@@ -45,7 +48,7 @@ public class HomeFragment extends Fragment {
     RecyclerView subs_rv;
     SubscriptionAdapter subs_adapter;
 
-
+    ProgressBar progressBar;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -58,6 +61,7 @@ public class HomeFragment extends Fragment {
         newSubscription_fab = view.findViewById(R.id.home_addSubscription_fab);
         background_tv = view.findViewById(R.id.home_noSubsMessage_tv);
         refreshLayout = view.findViewById(R.id.home_refreshLayout_srl);
+        progressBar = view.findViewById(R.id.home_progress_pb);
         subs_rv = view.findViewById(R.id.home_subs_list_rv);
         subs_rv.setHasFixedSize(false);
         subs_rv.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -77,6 +81,21 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClicked(Subscription object1, User object2) {
 
+            }
+        });
+        subs_adapter.setSubsMenuClickListener(new SubsMenuClickListener() {
+            @Override
+            public void onMenuItemClick(int id, Subscription subscription) {
+                switch (id){
+                    case R.id.subs_menu_add_instruction:
+                        Utils.log("Add ins");
+                        break;
+                    case R.id.subs_menu_track:
+                        Utils.log("Track");
+                        TrackDialog trackDialog = new TrackDialog(getContext(), getActivity(), subscription);
+                        trackDialog.start(progressBar);
+                        break;
+                }
             }
         });
         subs_rv.setAdapter(subs_adapter);
@@ -206,5 +225,11 @@ public class HomeFragment extends Fragment {
 
             }
         });
+    }
+    private void enableLoading(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+    private void disableLoading(){
+        progressBar.setVisibility(View.GONE);
     }
 }

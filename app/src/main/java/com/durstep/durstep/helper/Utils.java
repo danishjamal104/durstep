@@ -152,6 +152,9 @@ public class Utils {
         // 9919114819@xyz.com
         return email.split("@")[0];
     }
+    public static String getEmailFromNUmber(Context context, String number){
+        return String.format("%s%s", number, getDomain());
+    }
 
     public static String getUserIdFromSubscriptionRef(DocumentReference subsRef){
         // subsRef = user/{id}/subscription/{sId}

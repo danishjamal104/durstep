@@ -156,6 +156,7 @@ public class Distributor_HomeFragment extends Fragment {
     }
 
     void startDelivery(){
+        enableLoading();
         updateLocation(new LocationUpdateListener() {
             @Override
             public void onLocationUpdate(double lat, double lon) {
@@ -170,6 +171,7 @@ public class Distributor_HomeFragment extends Fragment {
                         }else{
                             Utils.longToast(getContext(), error);
                         }
+                        disableLoading();
                     }
                     @Override
                     public void onSingleDataLoaded(Void object) {
@@ -183,6 +185,7 @@ public class Distributor_HomeFragment extends Fragment {
         });
     }
     void updateDelivery(){
+        enableLoading();
         updateLocation(new LocationUpdateListener() {
             @Override
             public void onLocationUpdate(double lat, double lon) {
@@ -196,6 +199,7 @@ public class Distributor_HomeFragment extends Fragment {
                         }else{
                             Utils.longToast(getContext(), error);
                         }
+                        disableLoading();
                     }
                     @Override
                     public void onSingleDataLoaded(Void object) {
@@ -243,12 +247,13 @@ public class Distributor_HomeFragment extends Fragment {
                 }
             }
         };
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+
+        if (getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             bufferListener = listener;
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     LOCATION_PERMISSION_CODE);
             return;
         }

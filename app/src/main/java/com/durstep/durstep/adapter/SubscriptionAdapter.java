@@ -16,6 +16,7 @@ import com.durstep.durstep.R;
 import com.durstep.durstep.helper.TrackDialog;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.ListItemClickListener;
+import com.durstep.durstep.interfaces.SubsMenuClickListener;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.model.AppMode;
 import com.durstep.durstep.model.Subscription;
@@ -32,6 +33,8 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
     List<Subscription> subscriptionList;
     Context context;
     Activity activity;
+
+    SubsMenuClickListener subsMenuClickListener;
 
     ListItemClickListener<Subscription, User> subscriptionListItemClickListener;
 
@@ -84,19 +87,15 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
                     return;
                 }
 
+                subscriptionListItemClickListener.onItemClicked(subscription, null);
+
                 PopupMenu menu = new PopupMenu(context, holder.menu_fab);
                 menu.inflate(R.menu.subs_item_menu);
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()){
-                            case R.id.subs_menu_add_instruction:
-                                Utils.log("Add ins");
-                                break;
-                            case R.id.subs_menu_track:
-                                Utils.log("Track");
-                                TrackDialog trackDialog = new TrackDialog(context, activity, subscription);
-                                break;
+                        if(subsMenuClickListener!=null){
+                            subsMenuClickListener.onMenuItemClick(item.getItemId(), subscription);
                         }
                         return false;
                     }
@@ -121,6 +120,10 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
     @Override
     public int getItemCount() {
         return subscriptionList.size();
+    }
+
+    public void setSubsMenuClickListener(SubsMenuClickListener subsMenuClickListener) {
+        this.subsMenuClickListener = subsMenuClickListener;
     }
 
     public class SubsViewHolder extends RecyclerView.ViewHolder{

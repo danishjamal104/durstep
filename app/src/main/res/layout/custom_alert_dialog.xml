@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/name"
-            app:endIconMode="clear_text"
+            app:endIconMode="password_toggle"
             app:startIconDrawable="@drawable/ic_menu_profile"
             android:layout_below="@id/title"
             android:visibility="gone">
@@ -56,7 +56,7 @@
             android:id="@+id/til_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="textPassword"
             android:textColor="@color/grey" />
 
         </com.google.android.material.textfield.TextInputLayout>

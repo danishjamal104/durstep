@@ -23,7 +23,12 @@ public class CustomDialog {
     TextInputLayout til;
     MaterialButton positive, negative;
 
-    LinearLayout buttons_ll;
+    private View.OnClickListener defaultListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            hide();
+        }
+    };
 
     boolean isInputEnable = false;
 
@@ -74,7 +79,11 @@ public class CustomDialog {
     }
     public void setError(String error){
         if(isInputEnable){
-            til.setError(error);
+            if(error!=null){
+                til.setError(error);
+            }else{
+                til.setErrorEnabled(false);
+            }
         }
     }
     public void removeError(){
@@ -87,14 +96,25 @@ public class CustomDialog {
             til.setHint(hint);
         }
     }
+    public String getPassword(){
+        return til.getEditText().getText().toString().trim();
+    }
 
     public void setPositive(String text, View.OnClickListener listener){
         positive.setText(text);
-        positive.setOnClickListener(listener);
+        if(listener!=null){
+            positive.setOnClickListener(listener);
+        }else{
+            positive.setOnClickListener(defaultListener);
+        }
     }
     public void setNegative(String text, View.OnClickListener listener) {
         negative.setText(text);
-        negative.setOnClickListener(listener);
+        if(listener!=null){
+            negative.setOnClickListener(listener);
+        }else{
+            negative.setOnClickListener(defaultListener);
+        }
     }
 
     public void setTitle(String text){
@@ -108,23 +128,12 @@ public class CustomDialog {
     public void show(){
         dialog.show();
     }
+    public void hide(){
+        dialog.dismiss();
+    }
     private void setButtonBelow(int id){
         ((RelativeLayout.LayoutParams)positive.getLayoutParams()).addRule(RelativeLayout.BELOW, id);
         ((RelativeLayout.LayoutParams)negative.getLayoutParams()).addRule(RelativeLayout.BELOW, id);
-        //((RelativeLayout.LayoutParams)negative.getLayoutParams()).addRule(RelativeLayout.START_OF, R.id.positive);
-
-        int px_32 = getPx(32);
-        int px_16 = getPx(16);
-
-
-        /*RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) positive.getLayoutParams();
-        params.addRule(RelativeLayout.ALIGN_PARENT_END);
-        params.setMargins(500, 0, 500, 0);
-        positive.setLayoutParams(params);*/
-
-        //((RelativeLayout.LayoutParams) buttons_ll.getLayoutParams()).addRule(RelativeLayout.BELOW, id);
-       // buttons_ll.setPadding(0, 0, px_32, 0);
-
     }
 
     private int getPx(int dp){

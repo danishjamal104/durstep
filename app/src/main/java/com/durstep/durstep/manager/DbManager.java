@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.interfaces.OrderLoadingTask;
+import com.durstep.durstep.interfaces.ProfileUpdateTask;
 import com.durstep.durstep.interfaces.SubscriptionLoadingTask;
 import com.durstep.durstep.model.ActiveDelivery;
 import com.durstep.durstep.model.Order;
@@ -18,8 +19,11 @@ import com.durstep.durstep.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,6 +41,7 @@ import java.util.Map;
 public class DbManager {
 
     private static FirebaseAuth mAuth;
+    private static FirebaseUser user;
     private static FirebaseFirestore mRef;
     private static DocumentReference userRef;
 
@@ -393,6 +398,62 @@ public class DbManager {
                 });
     }
 
+    public static void updateName(String name, ProfileUpdateTask fbTask){
+        getUser().updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(name).build())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(!task.isSuccessful()){
+                            fbTask.onComplete(false, task.getException().getLocalizedMessage());
+                            return;
+                        }
+                        getUserRef().update("name", name).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(!task.isSuccessful()){
+                                    fbTask.onComplete(false, task.getException().getLocalizedMessage());
+                                    return;
+                                }
+                                fbTask.onComplete(true, name);
+                            }
+                        });
+                    }
+                });
+    }
+    public static void updateNumber(String number, ProfileUpdateTask fbTask){
+        getUser().updateEmail(number+Utils.getDomain()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(!task.isSuccessful()){
+                    fbTask.onComplete(false, task.getException().getLocalizedMessage());
+                    return;
+                }
+                getUserRef().update("number", number).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(!task.isSuccessful()){
+                            fbTask.onComplete(false, task.getException().getLocalizedMessage());
+                            return;
+                        }
+                        fbTask.onComplete(true, number);
+                    }
+                });
+            }
+        });
+    }
+    public static void updatePassword(String pwd, ProfileUpdateTask fbTask){
+        getUser().updatePassword(pwd).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    fbTask.onComplete(true, null);
+                    return;
+                }
+                fbTask.onComplete(false, task.getException().getLocalizedMessage());
+            }
+        });
+    }
+
 
     public static void getDeliveryLocation(DocumentReference reference, FirebaseTask<GeoPoint> fbTask){
         reference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -408,6 +469,9 @@ public class DbManager {
         });
     }
 
+    public static AuthCredential getCred(String number, String pwd){
+        return EmailAuthProvider.getCredential(number+Utils.getDomain(), pwd);
+    }
     public static FirebaseAuth getmAuth(){
         if(mAuth==null){
             mAuth = FirebaseAuth.getInstance();
@@ -416,6 +480,12 @@ public class DbManager {
     }
     public static String getUid(){
         return getmAuth().getUid();
+    }
+    public static FirebaseUser getUser(){
+        if(user==null){
+            user = getmAuth().getCurrentUser();
+        }
+        return user;
     }
     public static FirebaseFirestore getmRef(){
         if(mRef==null){

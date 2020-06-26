@@ -97,7 +97,8 @@ public class StatsFragment extends Fragment {
 
     void loadOrderOfMonth(String month){
         progressBar.setVisibility(View.VISIBLE);
-        DbManager.loadMonthOrder(DbManager.getUid(), new OrderLoadingTask() {
+        String uid = DbManager.getUid();
+        DbManager.loadMonthOrder(uid, new OrderLoadingTask() {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if (isSuccess && error==null){
@@ -122,8 +123,8 @@ public class StatsFragment extends Fragment {
     void setMetaData(Map<String, Object> metaData){
         this.md = metaData;
         int orderSize = ((List<DocumentReference>) md.get("orders")).size();
-        double consumption = (double) md.get("consumption");
-        double due = (double) md.get("due");
+        double consumption = Double.parseDouble(md.get("consumption").toString());
+        double due = Double.parseDouble(md.get("due").toString());
         String payment;
         try{
             payment = md.get("paid").toString();

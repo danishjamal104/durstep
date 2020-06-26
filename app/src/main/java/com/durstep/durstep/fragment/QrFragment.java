@@ -95,7 +95,7 @@ public class QrFragment extends Fragment {
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
                         com.durstep.durstep.model.Response result = unpack(response);
-                        if(result.getStatus()==200){
+                        if(result.getStatus()==204){
                             NotifyManager.sendDeliveryConfirmation(getContext(), result.getData(), litre);
                         }
                         Utils.log(""+result.getStatus());
@@ -118,7 +118,7 @@ public class QrFragment extends Fragment {
     }
     void showOrderReceiveDialog(com.durstep.durstep.model.Response result){
         String title;
-        if(result.getStatus()==200 || result.getStatus()==202){
+        if(result.getStatus()==200 || result.getStatus()==202 || result.getStatus()==204){
             title = getString(R.string.success);
         }else{
             title = getString(R.string.server_error);

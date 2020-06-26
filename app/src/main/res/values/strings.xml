@@ -50,7 +50,7 @@
 
     <string name="profile_no_change">No change</string>
     <string name="profile_authenticate">Authenticate</string>
-
+    <string name="profile_reAuth_hint">Enter Old Password</string>
     <string name="wrong_pwd">Wrong password</string>
     <string name="wrong_credential">Wrong credential</string>
 
@@ -180,6 +180,9 @@
     <string name="total_consumption">Consumption</string>
     <string name="total_amount_due">Amount Due</string>
     <string name="total_amount_paid">Amount Paid</string>
+
+    <string name="turn_on_location">Permission Not Given</string>
+    <string name="client_location_error">Turn On Your Location</string>
 
     <!--month-->
     <string name="jan">January</string>

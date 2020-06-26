@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Looper;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.core.app.ActivityCompat;
 
@@ -32,25 +34,33 @@ public class TrackDialog {
 
     Activity activity;
     Context context;
-    AlertDialog.Builder dialog;
+
+    CustomDialog dialog;
 
     Subscription subscription;
+
+    ProgressBar progressBar;
 
     public TrackDialog(Context context, Activity activity, Subscription subscription) {
         this.context = context;
         this.subscription = subscription;
+        this.activity = activity;
+    }
+    public void start(ProgressBar progressBar){
+        this.progressBar = progressBar;
         setUp();
     }
 
     private void setUp(){
-        dialog = new AlertDialog.Builder(context);
+        dialog = new CustomDialog(context);
         dialog.setTitle(context.getString(R.string.track_info));
-        dialog.setPositiveButton(context.getString(R.string.ok), null);
-        dialog.setNegativeButton(context.getString(R.string.cancel), null);
+        dialog.setPositive(context.getString(R.string.ok), null);
+        dialog.setNegative(context.getString(R.string.cancel), null);
         if(subscription.getActive()==null){
             dialog.setMessage(context.getString(R.string.track_inactive_message));
             dialog.show();
         }else{
+            enableLoading();
             track();
         }
 
@@ -60,18 +70,16 @@ public class TrackDialog {
         DbManager.getDeliveryLocation(subscription.getActive(), new FirebaseTask<GeoPoint>() {
             @Override
             public void onComplete(boolean isSuccess, String error) {
-
             }
-
             @Override
             public void onSingleDataLoaded(GeoPoint object) {
                 accessLocation(new LocationUpdateListener() {
                     @Override
                     public void onLocationUpdate(double lat, double lon) {
-                        float dist = Utils.calculateDistance(object, new GeoPoint(lat, lon));
                         double d = Utils.meterDistanceBetweenPoints((float)lat, (float)lon,
                                 (float)object.getLatitude(), (float)object.getLongitude());
                         dialog.setMessage(String.format("Your milk is %s meter away", ""+d));
+                        disableLoading();
                         dialog.show();
                     }
                 });
@@ -102,18 +110,32 @@ public class TrackDialog {
                     client.removeLocationUpdates(this);
                 }
                 if (locationResult != null && locationResult.getLocations().size() > 0) {
-                    int latestIdx = locationResult.getLocations().size() - 1;
-                    Location location = locationResult.getLocations().get(latestIdx);
-                    Utils.log("Lattitude: " + location.getLatitude());
-                    Utils.log("Longitude: " + location.getLongitude());
-                    listener.onLocationUpdate(location.getLatitude(), location.getLongitude());
+                    try{
+                        int latestIdx = locationResult.getLocations().size() - 1;
+                        Location location = locationResult.getLocations().get(latestIdx);
+                        Utils.log("Lattitude: " + location.getLatitude());
+                        Utils.log("Longitude: " + location.getLongitude());
+                        listener.onLocationUpdate(location.getLatitude(), location.getLongitude());
+                    }catch (Exception e){
+                        Utils.longToast(context, context.getString(R.string.client_location_error));
+                    }
                 }
+                disableLoading();
             }
         };
-
-        client.requestLocationUpdates(lr, callback, Looper.getMainLooper());
+        if(context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            client.requestLocationUpdates(lr, callback, Looper.getMainLooper());
+        }else{
+            disableLoading();
+            Utils.toast(context, context.getString(R.string.turn_on_location));
+        }
     }
 
-
+    private void enableLoading(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+    private void disableLoading(){
+        progressBar.setVisibility(View.GONE);
+    }
 
 }

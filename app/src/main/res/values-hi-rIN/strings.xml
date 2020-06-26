@@ -137,4 +137,7 @@
     <string name="oct">अक्टूबर</string>
     <string name="nov">नवंबर</string>
     <string name="dec">दिसंबर</string>
+    <string name="profile_reAuth_hint">पुराना पासवर्ड डालें</string>
+    <string name="turn_on_location">अनुमति नहीं दी गई</string>
+    <string name="client_location_error">अपने स्थान को चालू करें</string>
 </resources>

@@ -45,4 +45,14 @@
         android:layout_marginBottom="78dp"
         android:src="@drawable/ic_subscribe"/>
 
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/home_progress_pb"
+        style="@style/SpinKitView.Large.MultiplePulseRing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/black"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
 </RelativeLayout>
