@@ -14,6 +14,7 @@ import com.durstep.durstep.R;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.manager.DbManager;
+import com.durstep.durstep.manager.NotifyManager;
 import com.durstep.durstep.manager.TokenManager;
 import com.durstep.durstep.manager.UserManager;
 import com.durstep.durstep.model.AppMode;
@@ -81,6 +82,7 @@ public class SignUpActivity extends BaseActivity {
                     TokenManager.handleOnLoginSignUp(SignUpActivity.this);
                     AppMode.updateAppMode(SignUpActivity.this, AppMode.CLIENT);
                     UserManager.setUser(SignUpActivity.this, user);
+                    NotifyManager.notifyAdmin_newUser(SignUpActivity.this, user.getName(), user.getNumber());
                     startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                     finishAffinity();
                 }else{

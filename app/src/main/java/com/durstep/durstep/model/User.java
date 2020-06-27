@@ -1,19 +1,19 @@
 package com.durstep.durstep.model;
 
 import android.content.Context;
-import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.durstep.durstep.R;
 import com.durstep.durstep.adapter.SubscriptionAdapter;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.interfaces.ListItemClickListener;
+import com.durstep.durstep.interfaces.MenuClickListener;
 import com.durstep.durstep.manager.DbManager;
 import com.google.firebase.firestore.Exclude;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -120,9 +120,23 @@ public class User {
         subscription_rv.setHasFixedSize(false);
         subscription_rv.setLayoutManager(new LinearLayoutManager(context));
 
-        subscriptionAdapter = new SubscriptionAdapter(new ArrayList<>(), context, subscriptionListItemClickListener);
+        subscriptionAdapter = new SubscriptionAdapter(context, subscriptionListItemClickListener);
 
         subscription_rv.setAdapter(subscriptionAdapter);
+
+        subscriptionAdapter.setMenuClickListener(new MenuClickListener<Subscription>() {
+            @Override
+            public void onMenuItemClick(int id, Subscription subscription) {
+                switch (id){
+                    case R.id.subs_menu_add_instruction:
+                        Utils.log("Add ins");
+                        break;
+                    case R.id.subs_menu_track:
+                        Utils.log("Track");
+                        break;
+                }
+            }
+        });
 
         DbManager.getSubscription(uid, new FirebaseTask<Subscription>() {
             @Override
@@ -134,10 +148,7 @@ public class User {
                 }
             }
             @Override
-            public void onSingleDataLoaded(Subscription object) {
-
-            }
-
+            public void onSingleDataLoaded(Subscription object) {}
             @Override
             public void onMultipleDataLoaded(List<Subscription> objects) {
                 subscriptionAdapter.addAll(objects);

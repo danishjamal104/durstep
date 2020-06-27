@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class Utils {
 
-    public final static String ADMIN_ID = "ZXCfMorVsyXZUS4oLLHy08T1Hwn2";
+    public final static String ADMIN_ID = "X1XXmSzO1PVgRcDU69j9F8PLi1V2";
 
     public final static int LOCATION_PERMISSION_CODE = 372;
     public final static double[] available_pack = {0.5,1,1.5,2,2.5,3,3.5,4,4.5,5};

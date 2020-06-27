@@ -184,6 +184,10 @@
     <string name="turn_on_location">Permission Not Given</string>
     <string name="client_location_error">Turn On Your Location</string>
 
+    <string name="menu_make_client">Make Client</string>
+    <string name="menu_make_distributor">Make Distributor</string>
+    <string name="menu_show_stats">Show Stats</string>
+
     <!--month-->
     <string name="jan">January</string>
     <string name="feb">February</string>
@@ -197,4 +201,5 @@
     <string name="oct">October</string>
     <string name="nov">November</string>
     <string name="dec">December</string>
+
 </resources>

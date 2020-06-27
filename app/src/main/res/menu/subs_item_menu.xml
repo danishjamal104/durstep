@@ -5,13 +5,12 @@
     <item
         android:id="@+id/subs_menu_add_instruction"
         android:title="@string/subs_menu_add_instruction"
-        android:icon="@drawable/ic_edit_instruction"
-        app:showAsAction="always"/>
+        android:icon="@drawable/ic_edit_instruction" />
 
     <item
         android:id="@+id/subs_menu_track"
         android:title="@string/subs_menu_track"
         android:icon="@drawable/ic_track"
-        app:showAsAction="always"/>
+        />
 
 </menu>

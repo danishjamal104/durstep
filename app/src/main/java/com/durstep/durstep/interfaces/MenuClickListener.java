@@ -5,6 +5,6 @@ import android.widget.PopupMenu;
 
 import com.durstep.durstep.model.Subscription;
 
-public interface SubsMenuClickListener {
-    void onMenuItemClick(int id, Subscription subscription);
+public interface MenuClickListener<T> {
+    void onMenuItemClick(int id, T object);
 }

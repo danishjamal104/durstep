@@ -140,4 +140,7 @@
     <string name="profile_reAuth_hint">पुराना पासवर्ड डालें</string>
     <string name="turn_on_location">अनुमति नहीं दी गई</string>
     <string name="client_location_error">अपने स्थान को चालू करें</string>
+    <string name="menu_make_client">ग्राहक बनायें</string>
+    <string name="menu_make_distributor">वितरक बनायें</string>
+    <string name="menu_show_stats">आंकड़े दिखाएं</string>
 </resources>

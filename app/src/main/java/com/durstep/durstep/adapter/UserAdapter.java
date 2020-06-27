@@ -2,9 +2,11 @@ package com.durstep.durstep.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.durstep.durstep.R;
 import com.durstep.durstep.interfaces.ListItemClickListener;
+import com.durstep.durstep.interfaces.MenuClickListener;
 import com.durstep.durstep.model.Subscription;
 import com.durstep.durstep.model.User;
 
@@ -28,12 +31,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     ListItemClickListener<Subscription, User> subscriptionListItemClickListener;
 
-    public UserAdapter(List<User> users, Context context, ListItemClickListener<Subscription, User> subscriptionListItemClickListener) {
-        this.allUsers = users;
-        this.filteredUsers = new ArrayList<>(users);
-        this.context = context;
-        this.subscriptionListItemClickListener = subscriptionListItemClickListener;
-    }
+    MenuClickListener<User> userMenuClickListener;
 
     public UserAdapter(Context context, ListItemClickListener<Subscription, User> subscriptionListItemClickListener) {
         this.allUsers = new ArrayList<>();
@@ -62,6 +60,34 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             }
         };
 
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscriptionListItemClickListener.onItemClicked(null, user);
+            }
+        });
+
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(userMenuClickListener!=null){
+                    PopupMenu menu = new PopupMenu(context, v.findViewById(R.id.user_list_item_topCard_cv));
+                    if(user.getType() == User.CLIENT){
+                        menu.inflate(R.menu.user_client_item_menu);
+                    }else{
+                        menu.inflate(R.menu.user_distributor_item_menu);
+                    }
+                    menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            userMenuClickListener.onMenuItemClick(item.getItemId(), user);
+                            return false;
+                        }
+                    });
+                    menu.show();
+                }
+            }
+        });
 
         holder.expand_iv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,9 +102,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                         // close current and open new
                         expanded_vh.expand_iv.setRotation(180f);
                         expanded_vh.subscriptionList_rv.setVisibility(View.GONE);
+                        holder.expand_iv.setRotation(0f);
+                        holder.subscriptionList_rv.setVisibility(View.VISIBLE);
                         expanded_vh = holder;
-                        expanded_vh.expand_iv.setRotation(0f);
-                        expanded_vh.subscriptionList_rv.setVisibility(View.VISIBLE);
                         user.loadSubscription(__this__);
                     }
                 } else {
@@ -105,6 +131,25 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         }
     }
 
+    @Override
+    public int getItemCount() {
+        return filteredUsers.size();
+    }
+
+    public void setUserMenuClickListener(MenuClickListener<User> userMenuClickListener) {
+        this.userMenuClickListener = userMenuClickListener;
+    }
+
+    public void applyFilter(int filter){
+        filteredUsers.clear();
+
+        for(User u: allUsers){
+            if(u.getType()==filter){
+                filteredUsers.add(u);
+            }
+        }
+        notifyDataSetChanged();
+    }
     public void applyFilter(String nameNumber) {
         nameNumber = nameNumber.toLowerCase();
         filteredUsers.clear();
@@ -120,19 +165,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         notifyDataSetChanged();
     }
 
-    @Override
-    public int getItemCount() {
-        return filteredUsers.size();
-    }
-
     public class UserViewHolder extends RecyclerView.ViewHolder {
 
         TextView totalOrder_tv, nameNumber_tv;
         ImageView expand_iv;
         RecyclerView subscriptionList_rv;
+        View view;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
+            view =itemView;
             totalOrder_tv = itemView.findViewById(R.id.user_list_item_totalOrderNumber_tv);
             nameNumber_tv = itemView.findViewById(R.id.user_list_item_nameNumber_tv);
             expand_iv = itemView.findViewById(R.id.user_list_item_typeIllustration_iv);

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/client_show_stats"
+        android:title="@string/menu_show_stats"/>
+
+    <item android:id="@+id/client_make_distributor"
+        android:title="@string/menu_make_distributor"
+        />
+
+</menu>

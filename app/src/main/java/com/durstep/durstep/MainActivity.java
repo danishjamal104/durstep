@@ -15,6 +15,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.TextView;
 
+import com.durstep.durstep.fragment.home.Admin_HomeFragment;
 import com.durstep.durstep.fragment.home.Distributor_HomeFragment;
 import com.durstep.durstep.fragment.home.HomeFragment;
 import com.durstep.durstep.fragment.ProfileFragment;
@@ -130,7 +131,7 @@ public class MainActivity extends BaseActivity {
                 }else if(appMode==AppMode.DISTRIBUTOR){
                     openFragment(new Distributor_HomeFragment());
                 }else {
-
+                    openFragment(new Admin_HomeFragment());
                 }
                 selectMenu(Menu.HOME);
             }

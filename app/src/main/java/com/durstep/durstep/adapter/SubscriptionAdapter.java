@@ -13,10 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.durstep.durstep.R;
-import com.durstep.durstep.helper.TrackDialog;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.ListItemClickListener;
-import com.durstep.durstep.interfaces.SubsMenuClickListener;
+import com.durstep.durstep.interfaces.MenuClickListener;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.model.AppMode;
 import com.durstep.durstep.model.Subscription;
@@ -34,23 +33,17 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
     Context context;
     Activity activity;
 
-    SubsMenuClickListener subsMenuClickListener;
+    MenuClickListener<Subscription> menuClickListener;
 
     ListItemClickListener<Subscription, User> subscriptionListItemClickListener;
 
-    public SubscriptionAdapter(List<Subscription> subscriptionList, Context context, ListItemClickListener<Subscription, User> subscriptionListItemClickListener ) {
-        this.subscriptionList = subscriptionList;
+    public SubscriptionAdapter(Context context, ListItemClickListener<Subscription, User> subscriptionListItemClickListener ) {
+        this.subscriptionList = new ArrayList<>();
         //this.activity = activity;
         this.context = context;
         this.subscriptionListItemClickListener = subscriptionListItemClickListener;
     }
 
-    public SubscriptionAdapter(Activity activity, Context context,  ListItemClickListener<Subscription, User> subscriptionListItemClickListener) {
-        subscriptionList = new ArrayList<>();
-        this.subscriptionListItemClickListener = subscriptionListItemClickListener;
-        this.context = context;
-        this.activity = activity;
-    }
 
     @NonNull
     @Override
@@ -94,8 +87,8 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if(subsMenuClickListener!=null){
-                            subsMenuClickListener.onMenuItemClick(item.getItemId(), subscription);
+                        if(menuClickListener !=null){
+                            menuClickListener.onMenuItemClick(item.getItemId(), subscription);
                         }
                         return false;
                     }
@@ -122,8 +115,8 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         return subscriptionList.size();
     }
 
-    public void setSubsMenuClickListener(SubsMenuClickListener subsMenuClickListener) {
-        this.subsMenuClickListener = subsMenuClickListener;
+    public void setMenuClickListener(MenuClickListener<Subscription> menuClickListener) {
+        this.menuClickListener = menuClickListener;
     }
 
     public class SubsViewHolder extends RecyclerView.ViewHolder{

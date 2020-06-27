@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:cardCornerRadius="10dp"
     app:cardBackgroundColor="@android:color/transparent"
     android:layout_marginTop="8dp"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp">
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent">
-
         <androidx.cardview.widget.CardView
             android:id="@+id/user_list_item_topCard_cv"
             android:layout_width="match_parent"
-            android:layout_height="100dp">
+            android:layout_height="100dp"
+            app:cardCornerRadius="10dp"
+            >
             <RelativeLayout
                 android:id="@+id/user_list_item_topContainer_rl"
                 android:layout_width="match_parent"
@@ -69,7 +65,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_toEndOf="@id/user_list_item_orderContainer_rl"
                     android:fontFamily="@font/roboto_bold"
-                    tools:text="Abhishek\n9856124873"
+                    tools:text="Abashed\n9856124873"
                     android:textSize="18sp" />
 
             </RelativeLayout>
@@ -87,5 +83,5 @@
             android:layout_below="@id/user_list_item_topCard_cv"
             android:visibility="visible"/>
 
-    </RelativeLayout>
-</androidx.cardview.widget.CardView>
+
+</RelativeLayout>

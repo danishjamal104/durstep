@@ -1,8 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-//import * as nodemailer from 'nodemailer';
-//import * as cors from 'cors';
 admin.initializeApp()
+
+const month = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 
+'NOV', 'DEC']
 export const notify = 
 functions.https.onRequest((req, res)=>{
     //https://us-central1-durstep-7e7a8.cloudfunctions.net/notify?to=gre4OYbgiEZb5StRpOAldyVoZwD2&title=HttpText&msg=Hello
@@ -20,7 +21,7 @@ functions.https.onRequest((req, res)=>{
         if(type==="1"){
             // if type is 1 then user must want to mention his name and number in message
             // hence provide is as extra query 
-            message += ""+req.query.extra
+            message += " "+req.query.extra
         }
         const payload = {
             token: push_token,
@@ -44,7 +45,7 @@ functions.https.onRequest((req, res) => {
     const to = req.query.to
     const amountSt = req.query.l
     const amount: number = parseFloat(<string>amountSt)
-    admin.firestore().collection(`user/${to}/subscriptions/`).orderBy('sDate', 'desc').get()
+    return admin.firestore().collection(`user/${to}/subscriptions/`).orderBy('sDate', 'desc').get()
     .then(querySnap => {
         // complete function by getting data
         if(querySnap.empty){
@@ -149,12 +150,10 @@ functions.firestore.document('active_delivery/{distributorId}')
 export const sortOrder = 
 functions.firestore.document('orders/{oId}')
 .onCreate(dt => {
-    const month = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 
-'NOV', 'DEC']
+    
 
     const order = dt.data()
     const time: Date = (<admin.firestore.Timestamp>order.time).toDate()
-    
     const doc_name = month[time.getMonth()]+'_'+time.getFullYear()
 
     return admin.firestore().doc('admin/meta-data').get()
@@ -169,6 +168,29 @@ functions.firestore.document('orders/{oId}')
 
         return admin.firestore().doc(`user/${order.to}/stats/${doc_name}`)
         .set(data, {merge: true})
+        .then(()=>{
 
+            const disttributor_data = {
+                order_delivered: admin.firestore.FieldValue.increment(1),
+                litre_delivered: admin.firestore.FieldValue.increment(order.amount),
+                orders: admin.firestore.FieldValue.arrayUnion(dt.ref)
+            }
+            return admin.firestore().doc(`user/${order.from}/stats/${doc_name}`)
+            .set(disttributor_data, {merge: true}).catch((e) => {console.log(e)})
+        }).catch((e) => {console.log(e)})
     }).catch((e) => {console.log(e)})
+})
+export const onActiveDeliveryDeleted = 
+functions.firestore.document('active_delivery/{distributorId}')
+.onDelete(adt => {
+    const ad = adt.data()
+    const time: Date = (admin.firestore.Timestamp.now()).toDate()
+    const doc_name = month[time.getMonth()]+'_'+time.getFullYear()
+
+    const data ={
+        alloted_delivery: ad.total
+    }
+
+    return admin.firestore().doc(`user/${adt.id}/stats/${doc_name}`)
+    .set(data, {merge:true}).catch((e) => {console.log(e)})
 })

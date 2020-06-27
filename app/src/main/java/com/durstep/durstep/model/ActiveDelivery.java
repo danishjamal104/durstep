@@ -1,6 +1,7 @@
 package com.durstep.durstep.model;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.List;
@@ -63,5 +64,10 @@ public class ActiveDelivery {
 
     public void setLocation(GeoPoint location) {
         this.location = location;
+    }
+
+    @Exclude
+    public boolean isDeliveryCompleted(){
+        return pending==0;
     }
 }

@@ -28,8 +28,9 @@ import com.durstep.durstep.helper.TrackDialog;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.interfaces.ListItemClickListener;
-import com.durstep.durstep.interfaces.SubsMenuClickListener;
+import com.durstep.durstep.interfaces.MenuClickListener;
 import com.durstep.durstep.manager.DbManager;
+import com.durstep.durstep.manager.NotifyManager;
 import com.durstep.durstep.model.Subscription;
 import com.durstep.durstep.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -77,13 +78,13 @@ public class HomeFragment extends Fragment {
                 showNewSubscriptionDialog(false);
             }
         });
-        subs_adapter = new SubscriptionAdapter(getActivity(), getContext(), new ListItemClickListener<Subscription, User>() {
+        subs_adapter = new SubscriptionAdapter(getContext(), new ListItemClickListener<Subscription, User>() {
             @Override
             public void onItemClicked(Subscription object1, User object2) {
 
             }
         });
-        subs_adapter.setSubsMenuClickListener(new SubsMenuClickListener() {
+        subs_adapter.setMenuClickListener(new MenuClickListener<Subscription>() {
             @Override
             public void onMenuItemClick(int id, Subscription subscription) {
                 switch (id){
@@ -191,6 +192,7 @@ public class HomeFragment extends Fragment {
         builder.show();
     }
     void subscribe(String time, double amount){
+        enableLoading();
         String[] hh_mm = time.split(":");
         String hh = hh_mm[0];
         String mm = hh_mm[1];
@@ -209,23 +211,19 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if(isSuccess){
-
+                    NotifyManager.notifyAdmin_newSubscription(getContext(), subscription);
                 }else{
                     Utils.toast(getContext(), error);
                 }
+                disableLoading();
             }
-
             @Override
-            public void onSingleDataLoaded(Void object) {
-
-            }
-
+            public void onSingleDataLoaded(Void object) {}
             @Override
-            public void onMultipleDataLoaded(List<Void> objects) {
-
-            }
+            public void onMultipleDataLoaded(List<Void> objects) {}
         });
     }
+
     private void enableLoading(){
         progressBar.setVisibility(View.VISIBLE);
     }
