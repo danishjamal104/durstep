@@ -112,7 +112,8 @@ public class User {
     }
 
     @Exclude
-    public void loadSubscription(ListItemClickListener<Subscription, User> subscriptionListItemClickListener){
+    public void loadSubscription(ListItemClickListener<Subscription, User> subscriptionListItemClickListener,
+                                 MenuClickListener<Subscription> subscriptionMenuClickListener){
         if(subscriptionAdapter!=null){
             return;
         }
@@ -124,19 +125,7 @@ public class User {
 
         subscription_rv.setAdapter(subscriptionAdapter);
 
-        subscriptionAdapter.setMenuClickListener(new MenuClickListener<Subscription>() {
-            @Override
-            public void onMenuItemClick(int id, Subscription subscription) {
-                switch (id){
-                    case R.id.subs_menu_add_instruction:
-                        Utils.log("Add ins");
-                        break;
-                    case R.id.subs_menu_track:
-                        Utils.log("Track");
-                        break;
-                }
-            }
-        });
+        subscriptionAdapter.setMenuClickListener(subscriptionMenuClickListener);
 
         DbManager.getSubscription(uid, new FirebaseTask<Subscription>() {
             @Override

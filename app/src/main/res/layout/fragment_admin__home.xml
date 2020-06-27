@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.home.Admin_HomeFragment">
+    tools:context=".fragment.home.Admin_HomeFragment"
+    android:background="@drawable/gradient_bg">
 
     <LinearLayout
         android:id="@+id/admin_home_topBar_ll"
@@ -46,12 +47,18 @@
             android:backgroundTint="@color/transparent" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/admin_home_userList_rv"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/admin_home_refreshLayout_srl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/admin_home_topBar_ll"
-        tools:listitem="@layout/expandable_user_list_item"/>
+        android:layout_below="@id/admin_home_topBar_ll">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/admin_home_userList_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/expandable_user_list_item"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

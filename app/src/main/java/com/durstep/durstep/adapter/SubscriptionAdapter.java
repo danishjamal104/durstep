@@ -76,24 +76,19 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         holder.menu_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(AppMode.getAppMode(context)!=AppMode.CLIENT){
-                    return;
-                }
-
-                subscriptionListItemClickListener.onItemClicked(subscription, null);
-
-                PopupMenu menu = new PopupMenu(context, holder.menu_fab);
-                menu.inflate(R.menu.subs_item_menu);
-                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if(menuClickListener !=null){
+                if(menuClickListener!=null){
+                    PopupMenu menu = new PopupMenu(context, holder.menu_fab);
+                    menu.inflate(R.menu.subs_item_menu);
+                    menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
                             menuClickListener.onMenuItemClick(item.getItemId(), subscription);
+                            return false;
                         }
-                        return false;
-                    }
-                });
-                menu.show();
+                    });
+                    menu.show();
+                }
+                subscriptionListItemClickListener.onItemClicked(subscription, null);
             }
         });
     }

@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,6 +28,8 @@ import com.durstep.durstep.interfaces.MenuClickListener;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.model.Subscription;
 import com.durstep.durstep.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
@@ -39,6 +42,8 @@ public class Admin_HomeFragment extends Fragment {
     RecyclerView recyclerView;
     UserAdapter adapter;
 
+    SwipeRefreshLayout refreshLayout;
+
     public Admin_HomeFragment() {
     }
 
@@ -49,6 +54,7 @@ public class Admin_HomeFragment extends Fragment {
         filter_til = v.findViewById(R.id.admin_home_search_til);
         filter_ibt = v.findViewById(R.id.admin_home_filter_ib);
         recyclerView = v.findViewById(R.id.admin_home_userList_rv);
+        refreshLayout = v.findViewById(R.id.admin_home_refreshLayout_srl);
         return v;
     }
 
@@ -68,24 +74,39 @@ public class Admin_HomeFragment extends Fragment {
         adapter = new UserAdapter(getContext(), new ListItemClickListener<Subscription, User>() {
             @Override
             public void onItemClicked(Subscription object1, User objects2) {
-                if(object1==null && objects2!=null){
-
-                }
+                Utils.log(object1.toString());
+                Utils.log(objects2.toString());
             }
         });
         adapter.setUserMenuClickListener(new MenuClickListener<User>() {
             @Override
-            public void onMenuItemClick(int id, User object) {
+            public void onMenuItemClick(int id, User user) {
                 switch (id){
                     case R.id.client_make_distributor:
+                        changeUserType(user, User.DISTRIBUTOR);
                         break;
                     case R.id.client_show_stats:
                         break;
                     case R.id.distributor_make_client:
+                        changeUserType(user, User.CLIENT);
                         break;
                     case R.id.distributor_show_stats:
                         break;
                 }
+            }
+        });
+        adapter.setSubscriptionMenuClickListener(new MenuClickListener<Subscription>() {
+            @Override
+            public void onMenuItemClick(int id, Subscription object) {
+                Utils.log(""+object.getAmount());
+            }
+        });
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                adapter.allClear();
+                loadUser();
             }
         });
 
@@ -107,7 +128,23 @@ public class Admin_HomeFragment extends Fragment {
         });
 
         recyclerView.setAdapter(adapter);
-        loadUser();
+        refresh();
+    }
+
+    void changeUserType(User user, int type){
+        refreshLayout.setRefreshing(true);
+        DbManager.getmRef().document(String.format("user/%s", user.getUid()))
+        .update("type", type).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Utils.toast(getContext(), getString(R.string.success));
+                }else{
+                    Utils.longToast(getContext(), task.getException().getLocalizedMessage());
+                }
+                refresh();
+            }
+        });
     }
 
     void loadUser(){
@@ -119,16 +156,23 @@ public class Admin_HomeFragment extends Fragment {
                 }else{
                     Utils.longToast(getContext(), error);
                 }
+                refreshLayout.setRefreshing(false);
             }
             @Override
             public void onSingleDataLoaded(User object) {}
             @Override
             public void onMultipleDataLoaded(List<User> objects) {
                 adapter.addAll(objects);
+                refreshLayout.setRefreshing(false);
             }
         });
     }
 
+    void refresh(){
+        refreshLayout.setRefreshing(true);
+        adapter.allClear();
+        loadUser();
+    }
     void showFilterMenu(){
         PopupMenu menu = new PopupMenu(getContext(), filter_ibt);
         menu.inflate(R.menu.user_filter_menu);

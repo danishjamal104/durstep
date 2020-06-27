@@ -32,6 +32,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     ListItemClickListener<Subscription, User> subscriptionListItemClickListener;
 
     MenuClickListener<User> userMenuClickListener;
+    MenuClickListener<Subscription> subscriptionMenuClickListener;
 
     public UserAdapter(Context context, ListItemClickListener<Subscription, User> subscriptionListItemClickListener) {
         this.allUsers = new ArrayList<>();
@@ -105,14 +106,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                         holder.expand_iv.setRotation(0f);
                         holder.subscriptionList_rv.setVisibility(View.VISIBLE);
                         expanded_vh = holder;
-                        user.loadSubscription(__this__);
+                        user.loadSubscription(__this__, subscriptionMenuClickListener);
                     }
                 } else {
                     // open current
                     expanded_vh = holder;
                     expanded_vh.expand_iv.setRotation(0f);
                     expanded_vh.subscriptionList_rv.setVisibility(View.VISIBLE);
-                    user.loadSubscription(__this__);
+                    user.loadSubscription(__this__, subscriptionMenuClickListener);
                 }
             }
         });
@@ -136,9 +137,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         return filteredUsers.size();
     }
 
-    public void setUserMenuClickListener(MenuClickListener<User> userMenuClickListener) {
-        this.userMenuClickListener = userMenuClickListener;
-    }
 
     public void applyFilter(int filter){
         filteredUsers.clear();
@@ -162,6 +160,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 }
             }
         }
+        notifyDataSetChanged();
+    }
+
+    public void setUserMenuClickListener(MenuClickListener<User> userMenuClickListener) {
+        this.userMenuClickListener = userMenuClickListener;
+    }
+
+    public void setSubscriptionMenuClickListener(MenuClickListener<Subscription> subscriptionMenuClickListener) {
+        this.subscriptionMenuClickListener = subscriptionMenuClickListener;
+    }
+
+    public void allClear(){
+        filteredUsers.clear();
+        allUsers.clear();
         notifyDataSetChanged();
     }
 
