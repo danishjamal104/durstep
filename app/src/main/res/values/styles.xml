@@ -12,8 +12,8 @@
         <item name="fontFamily">@font/roboto_regular</item>
         <item name="android:drawablePadding">2dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:scaleX">0.8</item>
-        <item name="android:scaleY">0.8</item>
+        <item name="android:scaleX">0.5</item>
+        <item name="android:scaleY">0.5</item>
     </style>
 
     <style name="auth_til_theme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">

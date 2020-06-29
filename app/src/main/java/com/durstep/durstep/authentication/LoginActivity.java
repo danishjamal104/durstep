@@ -57,7 +57,6 @@ public class LoginActivity extends BaseActivity {
     private boolean validateInput(){
         String number = getText(number_til);
         String pwd =  getText(pwd_til);
-
         if(Utils.isValidNumber(number)){
             number_til.setErrorEnabled(false);
             if(Utils.isValidPassword(pwd)){
@@ -79,7 +78,6 @@ public class LoginActivity extends BaseActivity {
         show(progressBar);
         String number = getText(number_til);
         String pwd = getText(pwd_til);
-
         DbManager.logIn(number + Utils.getDomain(), pwd, new FirebaseTask<User>() {
             @Override
             public void onComplete(boolean isSuccess, String error) {
@@ -90,7 +88,6 @@ public class LoginActivity extends BaseActivity {
                     hide(progressBar);
                 }
             }
-
             @Override
             public void onSingleDataLoaded(User object) {
                 if(object==null && isLoggedIn){
@@ -104,11 +101,8 @@ public class LoginActivity extends BaseActivity {
                 }
                 hide(progressBar);
             }
-
             @Override
-            public void onMultipleDataLoaded(List<User> objects) {
-
-            }
+            public void onMultipleDataLoaded(List<User> objects) {}
         });
     }
     void logOut(){
@@ -121,16 +115,10 @@ public class LoginActivity extends BaseActivity {
                     toast(error);
                 }
             }
-
             @Override
-            public void onSingleDataLoaded(Void object) {
-
-            }
-
+            public void onSingleDataLoaded(Void object) {}
             @Override
-            public void onMultipleDataLoaded(List<Void> objects) {
-
-            }
+            public void onMultipleDataLoaded(List<Void> objects) {}
         });
     }
 }

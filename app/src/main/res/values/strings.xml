@@ -84,7 +84,7 @@
 
     <string name="ok">Ok</string>
 
-    <string name="order">Order</string>
+    <string name="order">Orders</string>
 
     <!--detail view of order-->
     <string name="order_by">By: </string>

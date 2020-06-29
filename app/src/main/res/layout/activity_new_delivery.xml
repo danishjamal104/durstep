@@ -73,4 +73,14 @@
         android:layout_marginEnd="38dp"
         android:text="@string/confirm_delivery"/>
 
+    <com.github.ybq.android.spinkit.SpinKitView
+        style="@style/SpinKitView.Large.Wave"
+        android:id="@+id/new_delivery_progress_pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/black"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
 </RelativeLayout>

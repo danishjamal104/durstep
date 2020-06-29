@@ -13,6 +13,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.durstep.durstep.fragment.home.Admin_HomeFragment;
@@ -38,6 +39,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends BaseActivity {
 
     private final int LOCATION_PERMISSION_CODE = 372;
@@ -46,14 +50,13 @@ public class MainActivity extends BaseActivity {
     FragmentTransaction fragmentTransaction;
 
     TextView home_tv, stats_tv, profile_tv, info_tv;
-
     TextView currentSelected;
-
     FloatingActionButton scan_fab;
-
     int appMode;
-
     LocationUpdateListener bufferListener;
+
+    int animationDuration = 250;
+    Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,11 +126,13 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 openFragment(new QrFragment());
+                selectMenu(Menu.QR);
             }
         });
         home_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(appMode==AppMode.CLIENT){
                     openFragment(new HomeFragment());
                 }else if(appMode==AppMode.DISTRIBUTOR){
@@ -141,6 +146,7 @@ public class MainActivity extends BaseActivity {
         stats_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(appMode==AppMode.CLIENT){
                     openFragment(new StatsFragment());
                 }else if(appMode==AppMode.DISTRIBUTOR){
@@ -154,6 +160,7 @@ public class MainActivity extends BaseActivity {
         profile_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 openFragment(new ProfileFragment());
                 selectMenu(Menu.PROFILE);
             }
@@ -161,6 +168,7 @@ public class MainActivity extends BaseActivity {
         info_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 selectMenu(Menu.INFO);
             }
         });
@@ -173,22 +181,44 @@ public class MainActivity extends BaseActivity {
         fragmentTransaction.commit();
     }
     void selectMenu(Menu menu){
+        View select, unSelect=null;
         if(currentSelected!=null){
             currentSelected.getCompoundDrawables()[1].setTint(getResources().getColor(R.color.menu_item_unSelected));
             currentSelected.setTextColor(getResources().getColor(R.color.menu_item_unSelected));
+            unSelect = currentSelected;
+        }else if(this.menu!=null){
+            unSelect = scan_fab;
         }
+        boolean animate = false;
+        if(this.menu!=menu){
+            animate=true;
+        }
+        this.menu = menu;
         if(menu==Menu.HOME){
             currentSelected = home_tv;
         }else if(menu==Menu.STATS){
             currentSelected = stats_tv;
         }else if(menu==Menu.PROFILE){
             currentSelected = profile_tv;
-        }else{
+        }else if(menu==Menu.INFO){
             currentSelected = info_tv;
+        }else{
+            currentSelected = null;
         }
-        currentSelected.getCompoundDrawables()[1].setTint(getResources().getColor(R.color.menu_item_selected));
-        currentSelected.setTextColor(getResources().getColor(R.color.menu_item_selected));
+        if(currentSelected!=null){
+            currentSelected.getCompoundDrawables()[1].setTint(getResources().getColor(R.color.menu_item_selected));
+            currentSelected.setTextColor(getColor(R.color.menu_item_selected));
+            select = currentSelected;
+            if(animate){select.animate().scaleY(0.8f).scaleX(0.8f).setDuration(animationDuration).start();}
+        }else{
+            select = scan_fab;
+            if(animate){select.animate().scaleY(1f).scaleX(1f).setDuration(animationDuration).start();}
+        }
+        if(unSelect!=null){
+            if(animate){unSelect.animate().scaleY(0.5f).scaleX(0.5f).setDuration(animationDuration).start();}
+        }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

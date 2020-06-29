@@ -17,6 +17,7 @@ import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.ListItemClickListener;
 import com.durstep.durstep.interfaces.MenuClickListener;
 import com.durstep.durstep.manager.DbManager;
+import com.durstep.durstep.manager.UserManager;
 import com.durstep.durstep.model.AppMode;
 import com.durstep.durstep.model.Subscription;
 import com.durstep.durstep.model.User;
@@ -76,7 +77,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         holder.menu_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(menuClickListener!=null){
+                if(menuClickListener!=null&&AppMode.getAppMode(context)==AppMode.CLIENT){
                     PopupMenu menu = new PopupMenu(context, holder.menu_fab);
                     menu.inflate(R.menu.subs_item_menu);
                     menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

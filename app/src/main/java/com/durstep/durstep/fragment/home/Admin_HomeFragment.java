@@ -22,6 +22,7 @@ import android.widget.PopupMenu;
 import com.durstep.durstep.R;
 import com.durstep.durstep.adapter.UserAdapter;
 import com.durstep.durstep.admin.StatsDialog;
+import com.durstep.durstep.helper.TrackDialog;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.interfaces.ListItemClickListener;
@@ -87,13 +88,11 @@ public class Admin_HomeFragment extends Fragment {
                     case R.id.client_make_distributor:
                         changeUserType(user, User.DISTRIBUTOR);
                         break;
-                    case R.id.client_show_stats:
-                        StatsDialog dialog = new StatsDialog(getContext(), user);
-                        break;
                     case R.id.distributor_make_client:
                         changeUserType(user, User.CLIENT);
                         break;
-                    case R.id.distributor_show_stats:
+                    default:
+                        StatsDialog dialog = new StatsDialog(getContext(), user);
                         break;
                 }
             }
@@ -101,7 +100,13 @@ public class Admin_HomeFragment extends Fragment {
         adapter.setSubscriptionMenuClickListener(new MenuClickListener<Subscription>() {
             @Override
             public void onMenuItemClick(int id, Subscription object) {
-                Utils.log(""+object.getAmount());
+                switch (id){
+                    case R.id.subs_menu_track:
+                        TrackDialog trackDialog = new TrackDialog(getContext(), getActivity(), object);
+                        break;
+                    default:
+                        break;
+                }
             }
         });
 

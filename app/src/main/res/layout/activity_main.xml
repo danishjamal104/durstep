@@ -20,7 +20,7 @@
         android:focusable="true"
         app:layout_anchor="@id/main_bottomMenuBar_bap"
         android:src="@drawable/ic_qr_white"
-        app:layout_anchorGravity="center|top"/>
+        app:layout_anchorGravity="center|top" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/main_bottomMenuBar_bap"
@@ -47,7 +47,8 @@
                 android:layout_weight="1"
                 android:drawableTop="@drawable/ic_menu_home"
                 android:text="@string/menu_home"
-                android:textColor="@color/menu_item_unSelected">
+                android:textColor="@color/menu_item_unSelected"
+                >
 
             </TextView>
 

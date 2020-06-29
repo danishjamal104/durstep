@@ -44,9 +44,7 @@ public class StatsDialog {
     User user;
 
     public StatsDialog(Context context, User user) {
-        if(user.getType()==User.DISTRIBUTOR){
-            return;
-        }
+
         this.context = context;
         this.user = user;
         v = new Dialog(context);

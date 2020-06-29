@@ -158,8 +158,9 @@ public class ProfileFragment extends Fragment {
                              if(result){
                                  UserManager.setName(getContext(), data);
                                  setText(name_til, data);
+                                 UserManager.setName(getContext(), new_name);
                                  if(!isPasswordUpdated&&!isNumberUpdated){
-                                     //Utils.toast(getContext(), getString(R.string.profile_updated));
+                                     Utils.toast(getContext(), getString(R.string.profile_updated));
                                  }else{
                                      complexServerAction(oldPwd);
                                  }
@@ -185,6 +186,7 @@ public class ProfileFragment extends Fragment {
                         UserManager.setNumber(getContext(), data);
                         setText(number_til, data);
                         Utils.toast(getContext(), getString(R.string.profile_updated));
+                        UserManager.setNumber(getContext(), new_number);
                     }else{
                         Utils.toast(getContext(), data);
                     }
@@ -223,6 +225,7 @@ public class ProfileFragment extends Fragment {
                                                     if(!result){
                                                         Utils.toast(getContext(), data);
                                                     }else{
+                                                        UserManager.setNumber(getContext(), new_number);
                                                         Utils.toast(getContext(), getString(R.string.profile_updated));
                                                     }
                                                     makeNonEditable();

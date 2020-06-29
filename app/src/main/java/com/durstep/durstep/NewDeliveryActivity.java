@@ -4,12 +4,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.durstep.durstep.adapter.UserAdapter;
 import com.durstep.durstep.helper.Utils;
@@ -39,14 +41,18 @@ public class NewDeliveryActivity extends BaseActivity {
     RecyclerView user_rv;
     UserAdapter userAdapter;
 
+    ProgressBar progressBar;
 
     List<Subscription> subscriptionList = new ArrayList<>();
     List<Chip> chips=new ArrayList<>();
+
+    int isModify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_delivery);
+        isModify = getIntent().getExtras().getInt("isModify", 0);
         init();
     }
     void init(){
@@ -55,6 +61,7 @@ public class NewDeliveryActivity extends BaseActivity {
         confirm_bt = findViewById(R.id.new_delivery_confirm_mbt);
         user_rv = findViewById(R.id.new_delivery_user_list_rv);
         loadPrevious_srl = findViewById(R.id.new_delivery_loadPrev_srl);
+        progressBar = findViewById(R.id.new_delivery_progress_pb);
         setUp();
     }
     void setUp(){
@@ -103,6 +110,10 @@ public class NewDeliveryActivity extends BaseActivity {
         });
 
         loadUser();
+        if(isModify==1){
+            loadPrevious_srl.setRefreshing(true);
+            loadPreviousDelivery();
+        }
     }
     void loadPreviousDelivery(){
         DbManager.getPreviousDeliveryOfDistributor(DbManager.getUid(), new SubscriptionLoadingTask() {
@@ -121,22 +132,23 @@ public class NewDeliveryActivity extends BaseActivity {
         });
     }
     void loadUser(){
+        enableLoading();
         DbManager.getAllUserOfType(User.CLIENT, new FirebaseTask<User>() {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if(isSuccess){
-
+                    Utils.toast(NewDeliveryActivity.this, "No Client");
                 }else{
-
+                    Utils.longToast(NewDeliveryActivity.this, error);
                 }
+                disableLoading();
             }
             @Override
-            public void onSingleDataLoaded(User object) {
-
-            }
+            public void onSingleDataLoaded(User object) {}
             @Override
             public void onMultipleDataLoaded(List<User> objects) {
                 userAdapter.addAll(objects);
+                disableLoading();
             }
         });
     }
@@ -206,4 +218,6 @@ public class NewDeliveryActivity extends BaseActivity {
             selected_subscription_cg.addView(chip);
         }
     }
+    void enableLoading(){progressBar.setVisibility(View.VISIBLE);}
+    void disableLoading(){progressBar.setVisibility(View.GONE);}
 }
