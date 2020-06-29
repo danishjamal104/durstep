@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.home.Distributor_HomeFragment">
+    tools:context=".fragment.stats.Admin_StatsFragment">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/dist_home_deliveryCard_cv"
+        android:id="@+id/admin_stats_paymentsCard_cv"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="170dp"
         app:cardBackgroundColor="@color/colorPrimaryDark"
         app:cardCornerRadius="20dp"
         android:layout_marginStart="16dp"
@@ -17,110 +17,99 @@
         android:layout_marginTop="16dp">
 
         <RelativeLayout
-            android:id="@+id/dist_home_deliveryContainer_rl"
+            android:id="@+id/admin_stats_root_rl"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/dist_home_inactiveMessage_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/no_current_delivery"
-                android:textAlignment="center"
-                android:textColor="@color/colorPrimary"
-                android:layout_centerInParent="true"
-                android:visibility="gone"/>
-
             <LinearLayout
-                android:id="@+id/dist_home_deliveryDetailContainer_ll"
+                android:id="@+id/admin_stats_orderDetailContainer_ll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginStart="16dp"
                 android:layout_centerVertical="true"
-                android:visibility="gone">
+                android:visibility="visible"
+                tools:ignore="RelativeOverlap">
                 <TextView
-                    android:id="@+id/dist_home_total_tv"
+                    android:id="@+id/admin_stats_consumed_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total: 60"
-                    android:textSize="22sp"
+                    tools:text="Consumed : 30 Litres"
+                    android:textSize="18sp"
                     android:padding="8dp"
                     android:fontFamily="@font/roboto_medium"
                     android:textColor="@color/colorPrimary"/>
                 <TextView
-                    android:id="@+id/dist_home_pending_tv"
+                    android:id="@+id/admin_stats_totalPayment_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pending: 30"
-                    android:textSize="22sp"
+                    tools:text="@string/total_payment"
+                    android:textSize="18sp"
                     android:padding="8dp"
                     android:fontFamily="@font/roboto_medium"
                     android:textColor="@color/colorPrimary"/>
                 <TextView
-                    android:id="@+id/dist_home_delivered_tv"
+                    android:id="@+id/admin_stats_amountPaid_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Delivered: 30"
-                    android:textSize="22sp"
+                    tools:text="@string/total_amount_paid"
+                    android:textSize="18sp"
+                    android:padding="8dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/colorPrimary"/>
+                <TextView
+                    android:id="@+id/admin_stats_amountDue_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/total_amount_due"
+                    android:textSize="18sp"
                     android:padding="8dp"
                     android:fontFamily="@font/roboto_medium"
                     android:textColor="@color/colorPrimary"/>
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/dist_home_deliveryUpdate_mbt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
-                android:text="@string/update"
-                android:layout_marginEnd="32dp"
-                android:visibility="gone"
-                tools:ignore="RelativeOverlap" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/dist_home_deliveryCancel_mbt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@id/dist_home_deliveryUpdate_mbt"
-                android:text="@string/cancel"
-                android:layout_marginEnd="32dp"
-                android:visibility="gone"
-                tools:ignore="RelativeOverlap" />
-
-            <TextView
-                android:id="@+id/dist_home_delivery_location_tv"
+            <com.google.android.material.chip.Chip
+                android:id="@+id/admin_stats_month_chip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
-                android:text="0N 0E"
+                tools:text="JUN"
                 android:layout_marginEnd="12dp"
                 android:layout_marginTop="12dp"
                 android:fontFamily="@font/roboto_bold_italic"
                 android:textColor="@color/colorPrimary"
-                android:visibility="gone"/>
+                app:chipBackgroundColor="@color/white"
+                android:visibility="visible"/>
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/admin_stats_addPayment_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/ic_plus"
+                app:backgroundTint="@color/white"
+                android:scaleY="0.5"
+                android:scaleX="0.5" />
 
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
-        android:id="@+id/dist_home_topCard_separator_ll"
+        android:id="@+id/admin_stats_topCard_separator_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/dist_home_deliveryCard_cv"
+        android:layout_below="@id/admin_stats_paymentsCard_cv"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="8dp">
         <TextView
-            android:id="@+id/dist_home_orderListHeading_tv"
+            android:id="@+id/admin_stats_orderListHeading_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/subscriptions"
+            android:text="@string/payments"
             android:textSize="14sp"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/roboto_bold"
@@ -134,20 +123,21 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/dist_home_SubsList_rv"
+        android:id="@+id/admin_stats_PaymentList_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/dist_home_topCard_separator_ll"
-        tools:listitem="@layout/subscription_list_item"/>
+        android:layout_below="@id/admin_stats_topCard_separator_ll"
+        tools:listitem="@layout/order_list_item"/>
 
     <com.github.ybq.android.spinkit.SpinKitView
-        android:id="@+id/dist_home_delivery_progress_pb"
-        style="@style/SpinKitView.Large.RotatingPlane"
+        android:id="@+id/admin_stats_progress_pb"
+        style="@style/SpinKitView.Large.RotatingCircle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:SpinKit_Color="@color/black"
+        app:SpinKit_Color="@color/colorPrimary"
         android:layout_centerInParent="true"
         android:visibility="gone"/>
+
 
 </RelativeLayout>

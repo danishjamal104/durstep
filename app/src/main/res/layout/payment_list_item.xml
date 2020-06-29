@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@color/colorPrimary"
+    android:layout_marginTop="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/payment_list_item_statusIllustration_v"
+            android:layout_width="12dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:background="@color/menu_item_selected"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/payment_list_item_statusIllustration_v"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="0dp">
+
+            <TextView
+                android:id="@+id/payment_list_item_user_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="By: Rinki"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/roboto_bold"
+                android:layout_marginBottom="6dp"/>
+
+
+            <TextView
+                android:id="@+id/payment_list_item_dateTime_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Time: "
+                android:textColor="@color/grey"
+                android:textSize="14sp"
+                android:fontFamily="@font/roboto_medium"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/payment_list_item_month_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Month: JAN-2020"
+            android:textSize="12sp"
+            android:textColor="@color/grey"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:padding="4dp"
+            android:fontFamily="@font/roboto_black_italic"/>
+
+
+        <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/payment_list_item_menu_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_menu_info"
+            app:backgroundTint="@color/colorPrimaryDark"
+            android:layout_alignParentEnd="true"
+            android:scaleX="0.4"
+            android:scaleY="0.4"
+            tools:ignore="RelativeOverlap" />-->
+
+        <TextView
+            android:id="@+id/payment_list_item_amount_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Rs. 20988"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/roboto_regular"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingEnd="12dp"
+            android:paddingStart="0dp" />
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

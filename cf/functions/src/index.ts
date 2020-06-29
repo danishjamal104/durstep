@@ -160,24 +160,33 @@ functions.firestore.document('orders/{oId}')
     .then(snap => {
         const rate: number = snap.data()?.rate
 
-        const data = {
+        const stats_promises: Promise<admin.firestore.WriteResult>[] = []
+
+        const client_stats_data = {
             due: admin.firestore.FieldValue.increment(rate*order.amount),
             orders: admin.firestore.FieldValue.arrayUnion(dt.ref),
             consumption: admin.firestore.FieldValue.increment(order.amount)
         }
 
-        return admin.firestore().doc(`user/${order.to}/stats/${doc_name}`)
-        .set(data, {merge: true})
-        .then(()=>{
+        const admin_stats_data = {
+            consumption: admin.firestore.FieldValue.increment(order.amount),
+            total_amount: admin.firestore.FieldValue.increment(rate*order.amount),
+            orders: admin.firestore.FieldValue.arrayUnion(dt.ref),
+        }
+        const disttributor_stats_data = {
+            litre_delivered: admin.firestore.FieldValue.increment(order.amount),
+            orders: admin.firestore.FieldValue.arrayUnion(dt.ref)
+        }
 
-            const disttributor_data = {
-                order_delivered: admin.firestore.FieldValue.increment(1),
-                litre_delivered: admin.firestore.FieldValue.increment(order.amount),
-                orders: admin.firestore.FieldValue.arrayUnion(dt.ref)
-            }
-            return admin.firestore().doc(`user/${order.from}/stats/${doc_name}`)
-            .set(disttributor_data, {merge: true}).catch((e) => {console.log(e)})
-        }).catch((e) => {console.log(e)})
+        stats_promises.push(admin.firestore().doc(`user/X1XXmSzO1PVgRcDU69j9F8PLi1V2/stats/${doc_name}`)
+        .set(admin_stats_data, {merge:true}))
+        stats_promises.push(admin.firestore().doc(`user/${order.from}/stats/${doc_name}`)
+        .set(disttributor_stats_data, {merge: true}))
+        stats_promises.push(admin.firestore().doc(`user/${order.to}/stats/${doc_name}`)
+        .set(client_stats_data, {merge: true}))
+
+        return Promise.all(stats_promises)
+        .catch((e) => {console.log(e)})
     }).catch((e) => {console.log(e)})
 })
 export const onActiveDeliveryDeleted = 
@@ -188,7 +197,8 @@ functions.firestore.document('active_delivery/{distributorId}')
     const doc_name = month[time.getMonth()]+'_'+time.getFullYear()
 
     const data ={
-        alloted_delivery: ad.total
+        allotted_delivery: admin.firestore.FieldValue.increment(ad.total),
+        order_delivered: admin.firestore.FieldValue.increment(ad.delivered),
     }
 
     return admin.firestore().doc(`user/${adt.id}/stats/${doc_name}`)

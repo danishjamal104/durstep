@@ -1,4 +1,4 @@
-package com.durstep.durstep.fragment;
+package com.durstep.durstep.fragment.stats;
 
 import android.os.Bundle;
 
@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.durstep.durstep.R;
 import com.durstep.durstep.adapter.OrderAdapter;
 import com.durstep.durstep.helper.Utils;
-import com.durstep.durstep.interfaces.OrderLoadingTask;
+import com.durstep.durstep.interfaces.StatsLoadingTask;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.model.Order;
 import com.google.android.material.chip.Chip;
@@ -98,11 +98,12 @@ public class StatsFragment extends Fragment {
     void loadOrderOfMonth(String month){
         progressBar.setVisibility(View.VISIBLE);
         String uid = DbManager.getUid();
-        DbManager.loadMonthOrder(uid, new OrderLoadingTask() {
+        DbManager.loadMonthOrder(uid, new StatsLoadingTask<Order>() {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if (isSuccess && error==null){
                     Utils.toast(getContext(), "No orders this month");
+                    emptyMetaData();
                 }else{
                     Utils.longToast(getContext(), error);
                 }
@@ -113,7 +114,7 @@ public class StatsFragment extends Fragment {
                 setMetaData(md);
             }
             @Override
-            public void onOrdersLoaded(List<Order> objects) {
+            public void onListLoaded(List<Order> objects) {
                 adapter.addAll(objects);
                 progressBar.setVisibility(View.GONE);
             }
@@ -137,5 +138,12 @@ public class StatsFragment extends Fragment {
         payment_due_tv.setText(String.format("%s: ₹ %s", getString(R.string.total_amount_due), due));
         payment_paid_tv.setText(String.format("%s: ₹ %s", getString(R.string.total_amount_paid), payment));
         month_chip.setText(Utils.getDateTimeInFormat(new Timestamp(new Date()), "MMM").toUpperCase());
+    }
+
+    void emptyMetaData(){
+        total_order_tv.setText(String.format("%s: %s", getString(R.string.total_order), ""));
+        consumption_tv.setText(String.format("%s: %s", getString(R.string.total_consumption), ""));
+        payment_due_tv.setText(String.format("%s: ₹ %s", getString(R.string.total_amount_due), ""));
+        payment_paid_tv.setText(String.format("%s: ₹ %s", getString(R.string.total_amount_paid), ""));
     }
 }

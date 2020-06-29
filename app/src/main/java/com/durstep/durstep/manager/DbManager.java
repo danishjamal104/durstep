@@ -8,12 +8,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.durstep.durstep.helper.Utils;
+import com.durstep.durstep.interfaces.DeliveryTask;
 import com.durstep.durstep.interfaces.FirebaseTask;
-import com.durstep.durstep.interfaces.OrderLoadingTask;
+import com.durstep.durstep.interfaces.StatsLoadingTask;
 import com.durstep.durstep.interfaces.ProfileUpdateTask;
 import com.durstep.durstep.interfaces.SubscriptionLoadingTask;
 import com.durstep.durstep.model.ActiveDelivery;
 import com.durstep.durstep.model.Order;
+import com.durstep.durstep.model.Payment;
 import com.durstep.durstep.model.Subscription;
 import com.durstep.durstep.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -291,7 +293,7 @@ public class DbManager {
                     }
                 });
     }
-    public static void getScheduledDelivery(FirebaseTask<ActiveDelivery> fbTask){
+    public static void getScheduledDelivery(DeliveryTask<ActiveDelivery, Subscription> fbTask){
         getUserRef().collection("pd").document("pd").get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -299,14 +301,40 @@ public class DbManager {
                         if(task.isSuccessful()){
                             if(task.getResult().getData()==null){
                                 fbTask.onComplete(true, null);
-                            }else{fbTask.onSingleDataLoaded(task.getResult().toObject(ActiveDelivery.class));}
+                            }else{
+                                ActiveDelivery delivery = task.getResult().toObject(ActiveDelivery.class);
+                                fbTask.onSingleDataLoaded(delivery);
+                                getmRef().runTransaction(new Transaction.Function<List<Subscription>>() {
+                                    @Nullable
+                                    @Override
+                                    public List<Subscription> apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                                        List<Subscription> subscriptions = new ArrayList<>();
+                                        for(DocumentReference reference: delivery.getSubscription_list()){
+                                            subscriptions.add(transaction.get(reference).toObject(Subscription.class));
+                                        }
+                                        return subscriptions;
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<List<Subscription>>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<List<Subscription>> task) {
+                                        if(task.isSuccessful()){
+                                            // here mode 0 is subs_list and 1 is delivered_list
+                                            fbTask.onExtraDataLoaded(task.getResult(), 0);
+                                        }else {
+                                            Utils.log(task.getException().getLocalizedMessage());
+                                            fbTask.onExtraDataLoaded(null, -1);
+                                        }
+                                    }
+                                });
+
+                            }
                         }else{
                             fbTask.onComplete(false, task.getException().getLocalizedMessage());
                         }
                     }
                 });
     }
-    public static void getCurrentActiveDelivery(FirebaseTask<ActiveDelivery> fbTask){
+    public static void getCurrentActiveDelivery(DeliveryTask<ActiveDelivery, Subscription> fbTask){
         getmRef().document("active_delivery/"+getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -314,7 +342,37 @@ public class DbManager {
                         if(task.isSuccessful()){
                             if(task.getResult().getData()==null){
                                 fbTask.onComplete(true, null);
-                            }else{fbTask.onSingleDataLoaded(task.getResult().toObject(ActiveDelivery.class));}
+                            }else{
+                                ActiveDelivery delivery = task.getResult().toObject(ActiveDelivery.class);
+                                fbTask.onSingleDataLoaded(delivery);
+                                getmRef().runTransaction(new Transaction.Function<Pair<List<Subscription>, List<Subscription>>>() {
+                                    @Nullable
+                                    @Override
+                                    public Pair<List<Subscription>, List<Subscription>> apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                                        List<Subscription> onWay_subs = new ArrayList<>();
+                                        List<Subscription> delivered_subs = new ArrayList<>();
+                                        for(DocumentReference reference: delivery.getSubscription_list()){
+                                            onWay_subs.add(transaction.get(reference).toObject(Subscription.class));
+                                        }
+                                        for(DocumentReference reference: delivery.getDelivered_list()){
+                                            delivered_subs.add(transaction.get(reference).toObject(Subscription.class));
+                                        }
+                                        return new Pair<>(onWay_subs, delivered_subs);
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<Pair<List<Subscription>, List<Subscription>>>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Pair<List<Subscription>, List<Subscription>>> task) {
+                                        if(task.isSuccessful()){
+                                            // here mode 0 is subs_list and 1 is delivered_list
+                                            Pair<List<Subscription>, List<Subscription>> pair = task.getResult();
+                                            fbTask.onExtraDataLoaded(pair.first, 0);
+                                            fbTask.onExtraDataLoaded(pair.second, 1);
+                                        }else {
+                                            fbTask.onExtraDataLoaded(null, -1);
+                                        }
+                                    }
+                                });
+                            }
                         }else{
                             fbTask.onComplete(false, task.getException().getLocalizedMessage());
                         }
@@ -347,11 +405,74 @@ public class DbManager {
             }
         });
     }
-
-    public static void loadMonthOrder(String uid, OrderLoadingTask orderLoadingTask, String month){
+    public static void addPayment(Payment payment, FirebaseTask<Void> fbTask){
+        String id = getmRef().collection("payment").document().getId();
+        payment.setId(id);
+        getmRef().document(String.format("payment/%s",id)).set(payment).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    fbTask.onComplete(true, null);
+                }else{
+                    fbTask.onComplete(false, task.getException().getLocalizedMessage());
+                }
+            }
+        });
+    }
+    public static void loadMonthPayments(String month, StatsLoadingTask<Payment> statsLoadingTask){
         String doc_name;
         if(month!=null){
-            doc_name = String.format("%s_%s", month, Utils.getDateTimeInFormat(new Timestamp(new Date()), "yyyy"));
+            doc_name = String.format("%s_%s", month.substring(0, 3).toUpperCase(), Utils.getDateTimeInFormat(new Timestamp(new Date()), "yyyy"));
+        }else{
+            doc_name = Utils.getDateTimeInFormat(new Timestamp(new Date()), "MMM_yyyy").toUpperCase();
+        }
+        getmRef().document("/user/X1XXmSzO1PVgRcDU69j9F8PLi1V2/stats/"+doc_name).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            Map<String, Object> data = task.getResult().getData();
+                            statsLoadingTask.onMetaDataLoaded(data);
+                            if(data==null){
+                                statsLoadingTask.onComplete(true, null);
+                            }else {
+                                List<DocumentReference> paymentsRef = (List<DocumentReference>) data.get("payments");
+                                if(paymentsRef.size()==0){
+                                    statsLoadingTask.onComplete(true, null);
+                                    return;
+                                }
+                                getmRef().runTransaction(new Transaction.Function<List<Payment>>() {
+                                    @Nullable
+                                    @Override
+                                    public List<Payment> apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                                        List<Payment> payments = new ArrayList<>();
+                                        for(DocumentReference payRef: paymentsRef){
+                                            payments.add(transaction.get(payRef).toObject(Payment.class));
+                                        }
+                                        return payments;
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<List<Payment>>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<List<Payment>> task) {
+                                        if(task.isSuccessful()){
+                                            statsLoadingTask.onListLoaded(task.getResult());
+                                        }else{
+                                            statsLoadingTask.onComplete(false, task.getException().getLocalizedMessage());
+                                        }
+                                    }
+                                });
+                            }
+                        }else{
+                            statsLoadingTask.onComplete(false, task.getException().getLocalizedMessage());
+                        }
+                    }
+                });
+    }
+
+    public static void loadMonthOrder(String uid, StatsLoadingTask<Order> statsLoadingTask, String month){
+        String doc_name;
+        if(month!=null){
+            doc_name = String.format("%s_%s", month.substring(0, 3).toUpperCase(), Utils.getDateTimeInFormat(new Timestamp(new Date()), "yyyy"));
         }else{
             doc_name = Utils.getDateTimeInFormat(new Timestamp(new Date()), "MMM_yyyy").toUpperCase();
         }
@@ -361,13 +482,13 @@ public class DbManager {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if(task.isSuccessful()){
                             Map<String, Object> data = task.getResult().getData();
+                            statsLoadingTask.onMetaDataLoaded(data);
                             if(data==null){
-                                orderLoadingTask.onComplete(true, null);
+                                statsLoadingTask.onComplete(true, null);
                             }else {
-                                orderLoadingTask.onMetaDataLoaded(data);
                                 List<DocumentReference> ordersRef = (List<DocumentReference>) data.get("orders");
                                 if(ordersRef.size()==0){
-                                    orderLoadingTask.onComplete(true, null);
+                                    statsLoadingTask.onComplete(true, null);
                                     return;
                                 }
                                 getmRef().runTransaction(new Transaction.Function<List<Order>>() {
@@ -384,15 +505,15 @@ public class DbManager {
                                     @Override
                                     public void onComplete(@NonNull Task<List<Order>> task) {
                                         if(task.isSuccessful()){
-                                            orderLoadingTask.onOrdersLoaded(task.getResult());
+                                            statsLoadingTask.onListLoaded(task.getResult());
                                         }else{
-                                            orderLoadingTask.onComplete(false, task.getException().getLocalizedMessage());
+                                            statsLoadingTask.onComplete(false, task.getException().getLocalizedMessage());
                                         }
                                     }
                                 });
                             }
                         }else{
-                            orderLoadingTask.onComplete(false, task.getException().getLocalizedMessage());
+                            statsLoadingTask.onComplete(false, task.getException().getLocalizedMessage());
                         }
                     }
                 });

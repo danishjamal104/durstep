@@ -143,4 +143,13 @@
     <string name="menu_make_client">ग्राहक बनायें</string>
     <string name="menu_make_distributor">वितरक बनायें</string>
     <string name="menu_show_stats">आंकड़े दिखाएं</string>
+    <string name="allotted_delivery">आवंटित डिलीवरी</string>
+    <string name="litre_delivered">लीटर डिलीवरी</string>
+    <string name="order_delivered">आदेश डिलीवरी</string>
+    <string name="pending_delivery">अपूर्ण डिलीवरी</string>
+    <string name="payments">पेमेंट</string>
+    <string name="total_payment">कुल​ पेमेंट</string>
+    <string name="payment">पेमेंट</string>
+    <string name="modify">संशोधित</string>
+    <string name="subscriptions">सदस्यता</string>
 </resources>

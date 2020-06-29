@@ -21,6 +21,7 @@ import android.widget.PopupMenu;
 
 import com.durstep.durstep.R;
 import com.durstep.durstep.adapter.UserAdapter;
+import com.durstep.durstep.admin.StatsDialog;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.interfaces.ListItemClickListener;
@@ -33,6 +34,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Admin_HomeFragment extends Fragment {
 
@@ -86,6 +88,7 @@ public class Admin_HomeFragment extends Fragment {
                         changeUserType(user, User.DISTRIBUTOR);
                         break;
                     case R.id.client_show_stats:
+                        StatsDialog dialog = new StatsDialog(getContext(), user);
                         break;
                     case R.id.distributor_make_client:
                         changeUserType(user, User.CLIENT);
@@ -110,7 +113,7 @@ public class Admin_HomeFragment extends Fragment {
             }
         });
 
-        filter_til.getEditText().addTextChangedListener(new TextWatcher() {
+        Objects.requireNonNull(filter_til.getEditText()).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 

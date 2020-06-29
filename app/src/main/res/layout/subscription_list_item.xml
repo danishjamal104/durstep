@@ -92,11 +92,5 @@
                 android:textStyle="bold"
                 android:textColor="#901B2946" />
         </LinearLayout>
-
-
-
-
     </RelativeLayout>
-
-
 </com.google.android.material.card.MaterialCardView>

@@ -85,6 +85,9 @@ public class LoginActivity extends BaseActivity {
             public void onComplete(boolean isSuccess, String error) {
                 if(isSuccess){
                     isLoggedIn = true;
+                }else{
+                    Utils.longToast(LoginActivity.this, error);
+                    hide(progressBar);
                 }
             }
 

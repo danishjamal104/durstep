@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -22,17 +24,25 @@ import android.widget.TextView;
 
 import com.durstep.durstep.NewDeliveryActivity;
 import com.durstep.durstep.R;
+import com.durstep.durstep.adapter.DeliveryAdapter;
+import com.durstep.durstep.adapter.SubscriptionAdapter;
+import com.durstep.durstep.interfaces.DeliveryTask;
+import com.durstep.durstep.interfaces.ListItemClickListener;
 import com.durstep.durstep.manager.NotifyManager;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.interfaces.LocationUpdateListener;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.model.ActiveDelivery;
+import com.durstep.durstep.model.Subscription;
+import com.durstep.durstep.model.User;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.GeoPoint;
@@ -46,8 +56,11 @@ public class Distributor_HomeFragment extends Fragment {
 
     LinearLayout detailContainer_ll;
     TextView total_tv, pending_tv, delivered_tv;
-    MaterialButton update_bt;
+    MaterialButton update_bt, cancel_bt;
     TextView inactive_tv, location_tv;
+
+    RecyclerView subscription_rv;
+    DeliveryAdapter adapter;
 
     ProgressBar progressBar;
 
@@ -71,6 +84,8 @@ public class Distributor_HomeFragment extends Fragment {
         delivered_tv = v.findViewById(R.id.dist_home_delivered_tv);
         progressBar = v.findViewById(R.id.dist_home_delivery_progress_pb);
         update_bt = v.findViewById(R.id.dist_home_deliveryUpdate_mbt);
+        cancel_bt = v.findViewById(R.id.dist_home_deliveryCancel_mbt);
+        subscription_rv = v.findViewById(R.id.dist_home_SubsList_rv);
         return v;
     }
 
@@ -83,14 +98,16 @@ public class Distributor_HomeFragment extends Fragment {
                 startActivity(new Intent(getActivity(), NewDeliveryActivity.class));
             }
         });
+        subscription_rv.setHasFixedSize(false);
+        subscription_rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new DeliveryAdapter(getContext());
+        subscription_rv.setAdapter(adapter);
         getCurrentActiveDelivery();
-
-
     }
 
     void getCurrentActiveDelivery() {
         enableLoading();
-        DbManager.getCurrentActiveDelivery(new FirebaseTask<ActiveDelivery>() {
+        DbManager.getCurrentActiveDelivery(new DeliveryTask<ActiveDelivery, Subscription>() {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if (isSuccess) {
@@ -118,13 +135,28 @@ public class Distributor_HomeFragment extends Fragment {
             }
 
             @Override
-            public void onMultipleDataLoaded(List<ActiveDelivery> objects) {
-
+            public void onExtraDataLoaded(List<Subscription> subscriptions, int mode) {
+                if(mode==-1){
+                    Utils.longToast(getContext(), getString(R.string.server_error));
+                    return;
+                }
+                for(Subscription subs: subscriptions){
+                    switch (mode){
+                        case 0:
+                            subs.deliveryMarker = Subscription.DeliveryMarker.ON_WAY;
+                            break;
+                        case 1:
+                            subs.deliveryMarker = Subscription.DeliveryMarker.DELIVERED;
+                            break;
+                    }
+                    adapter.add(subs);
+                    subs.loadUser(adapter);
+                }
             }
         });
     }
     void getScheduledDelivery() {
-        DbManager.getScheduledDelivery(new FirebaseTask<ActiveDelivery>() {
+        DbManager.getScheduledDelivery(new DeliveryTask<ActiveDelivery, Subscription>() {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if (isSuccess) {
@@ -133,7 +165,6 @@ public class Distributor_HomeFragment extends Fragment {
                 } else {
                     Utils.longToast(getContext(), error);
                 }
-
                 disableLoading();
             }
 
@@ -147,11 +178,19 @@ public class Distributor_HomeFragment extends Fragment {
                 delivered_tv.setText(getString(R.string.delivered) + " " + object.getDelivered());
                 disableLoading();
             }
-
             @Override
-            public void onMultipleDataLoaded(List<ActiveDelivery> objects) {
-
+            public void onExtraDataLoaded(List<Subscription> subscriptions, int mode) {
+                if(mode==-1){
+                    Utils.longToast(getContext(), getString(R.string.server_error));
+                    return;
+                }
+                for(Subscription subs: subscriptions){
+                    subs.deliveryMarker = Subscription.DeliveryMarker.SCHEDULED;
+                    adapter.add(subs);
+                    subs.loadUser(adapter);
+                }
             }
+
         });
     }
 
@@ -195,6 +234,7 @@ public class Distributor_HomeFragment extends Fragment {
                         if(isSuccess){
                             Utils.toast(getContext(), getString(R.string.success));
                             NotifyManager.sendLocationUpdate(getContext(), activeDelivery);
+                            adapter.clear();
                             getCurrentActiveDelivery();
                         }else{
                             Utils.longToast(getContext(), error);
@@ -275,19 +315,44 @@ public class Distributor_HomeFragment extends Fragment {
 
     void setBtStartMode() {
         update_bt.setText(getString(R.string.start));
+        cancel_bt.setText(getString(R.string.modify));
         update_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startDelivery();
             }
         });
+        cancel_bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NewDeliveryActivity.class);
+                intent.putExtra("isModify", 1);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
     }
     void setBtUpdateMode() {
         update_bt.setText(getString(R.string.update));
+        cancel_bt.setText(getString(R.string.cancel));
         update_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateDelivery();
+            }
+        });
+        cancel_bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DbManager.getmRef().document("active_delivery/"+DbManager.getUid()).delete()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+
+                                }
+                            }
+                        });
             }
         });
     }
@@ -296,12 +361,14 @@ public class Distributor_HomeFragment extends Fragment {
         inactive_tv.setVisibility(View.GONE);
         detailContainer_ll.setVisibility(View.VISIBLE);
         update_bt.setVisibility(View.VISIBLE);
+        cancel_bt.setVisibility(View.VISIBLE);
         location_tv.setVisibility(View.VISIBLE);
     }
     void hideDetail(){
         inactive_tv.setVisibility(View.VISIBLE);
         detailContainer_ll.setVisibility(View.GONE);
         update_bt.setVisibility(View.GONE);
+        cancel_bt.setVisibility(View.GONE);
         location_tv.setVisibility(View.GONE);
     }
     void enableLoading(){

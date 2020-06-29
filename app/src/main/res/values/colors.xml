@@ -13,6 +13,9 @@
     <color name="grey">#808080</color>
     <color name="dark_grey">#434343</color>
 
+    <color name="delivered">#388E3C</color>
+    <color name="on_way">#D32F2F</color>
+
     <color name="box_outline">#00796B</color>
     <color name="transparent">#00000000</color>
     <color name="hyperlink_color">#0645AD</color>

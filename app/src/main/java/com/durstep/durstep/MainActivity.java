@@ -20,7 +20,9 @@ import com.durstep.durstep.fragment.home.Distributor_HomeFragment;
 import com.durstep.durstep.fragment.home.HomeFragment;
 import com.durstep.durstep.fragment.ProfileFragment;
 import com.durstep.durstep.fragment.QrFragment;
-import com.durstep.durstep.fragment.StatsFragment;
+import com.durstep.durstep.fragment.stats.Admin_StatsFragment;
+import com.durstep.durstep.fragment.stats.Distributor_StatsFragment;
+import com.durstep.durstep.fragment.stats.StatsFragment;
 import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.LocationUpdateListener;
 import com.durstep.durstep.manager.DbManager;
@@ -139,7 +141,13 @@ public class MainActivity extends BaseActivity {
         stats_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openFragment(new StatsFragment());
+                if(appMode==AppMode.CLIENT){
+                    openFragment(new StatsFragment());
+                }else if(appMode==AppMode.DISTRIBUTOR){
+                    openFragment(new Distributor_StatsFragment());
+                }else {
+                    openFragment(new Admin_StatsFragment());
+                }
                 selectMenu(Menu.STATS);
             }
         });

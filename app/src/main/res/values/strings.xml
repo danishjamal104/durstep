@@ -167,10 +167,12 @@
     <!--distributor home fragment-->
     <string name="no_current_delivery">No Active Delivery\nClick here to start new delivery</string>
     <string name="update">Update</string>
+    <string name="modify">Modify</string>
     <string name="start">Start</string>
     <string name="total">Total: </string>
     <string name="pending">Pending: </string>
     <string name="delivered">Delivered: </string>
+    <string name="subscriptions">Subscriptions</string>
 
     <!--new delivery activity-->
     <string name="enter_name_or_number_to_search">Enter Name/Number to search</string>
@@ -188,6 +190,19 @@
     <string name="menu_make_distributor">Make Distributor</string>
     <string name="menu_show_stats">Show Stats</string>
 
+    <!--distributor stats fragment-->
+    <string name="allotted_delivery">Allotted Delivery</string>
+    <string name="litre_delivered">Litre Delivered</string>
+    <string name="order_delivered">Order Delivered</string>
+    <string name="pending_delivery">Pending Delivery</string>
+
+    <!--admin stats fragment-->
+    <string name="payments">Payments</string>
+    <string name="total_payment">Total Payment</string>
+
+    <string name="payment">Payment</string>
+
+
     <!--month-->
     <string name="jan">January</string>
     <string name="feb">February</string>
@@ -201,5 +216,6 @@
     <string name="oct">October</string>
     <string name="nov">November</string>
     <string name="dec">December</string>
+
 
 </resources>
