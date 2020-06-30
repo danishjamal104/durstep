@@ -41,6 +41,7 @@ public class StatsFragment extends Fragment {
     RecyclerView order_rv;
     OrderAdapter adapter;
     Map<String, Object> md;
+    String month=null;
 
 
     public StatsFragment() {
@@ -97,6 +98,11 @@ public class StatsFragment extends Fragment {
 
     void loadOrderOfMonth(String month){
         progressBar.setVisibility(View.VISIBLE);
+        if(month==null){
+            this.month = Utils.getDateTimeInFormat(new Timestamp(new Date()), "MMM");
+        }else{
+            this.month = month;
+        }
         String uid = DbManager.getUid();
         DbManager.loadMonthOrder(uid, new StatsLoadingTask<Order>() {
             @Override
@@ -141,7 +147,7 @@ public class StatsFragment extends Fragment {
         consumption_tv.setText(String.format("%s: %s %s", getString(R.string.total_consumption), consumption, getString(R.string.litre_abbreviation)));
         payment_due_tv.setText(String.format("%s: ₹ %s", getString(R.string.total_amount_due), due));
         payment_paid_tv.setText(String.format("%s: ₹ %s", getString(R.string.total_amount_paid), payment));
-        month_chip.setText(Utils.getDateTimeInFormat(new Timestamp(new Date()), "MMM").toUpperCase());
+        month_chip.setText(month.substring(0, 3).toUpperCase());
     }
 
     void emptyMetaData(){

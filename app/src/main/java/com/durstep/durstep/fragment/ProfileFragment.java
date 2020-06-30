@@ -1,5 +1,6 @@
 package com.durstep.durstep.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,15 +14,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.durstep.durstep.R;
+import com.durstep.durstep.authentication.LoginActivity;
 import com.durstep.durstep.helper.CustomDialog;
 import com.durstep.durstep.helper.Utils;
+import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.interfaces.ProfileUpdateTask;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.manager.UserManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.List;
 
 import io.grpc.okhttp.internal.Util;
 
@@ -30,6 +36,7 @@ public class ProfileFragment extends Fragment {
     TextInputLayout name_til, number_til, pwd_til, confirmPwd_til;
     MaterialButton update_bt;
     TextView edit_tv;
+    FloatingActionButton logout_fab;
 
     ProgressBar progressBar;
 
@@ -51,6 +58,7 @@ public class ProfileFragment extends Fragment {
         name_til = v.findViewById(R.id.profile_name_til);
         number_til = v.findViewById(R.id.profile_number_til);
         pwd_til = v.findViewById(R.id.profile_password_til);
+        logout_fab = v.findViewById(R.id.profile_logOut_fab);
         confirmPwd_til = v.findViewById(R.id.profile_confirmPassword_til);
         update_bt = v.findViewById(R.id.profile_update_btn);
         edit_tv = v.findViewById(R.id.profile_edit_tv);
@@ -65,7 +73,35 @@ public class ProfileFragment extends Fragment {
         number = UserManager.getNumber(getContext());
         setText(name_til, name);
         setText(number_til, number);
+        logout_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enableLoading();
+                DbManager.deletePushToken(getContext(), new FirebaseTask<Void>() {
+                    @Override
+                    public void onComplete(boolean isSuccess, String error) {
+                        if(isSuccess){
+                            DbManager.getmAuth().signOut();
+                            startActivity(new Intent(getActivity(), LoginActivity.class));
+                            getActivity().finishAffinity();
+                        }else{
+                            Utils.toast(getContext(), error);
+                        }
+                        disableLoading();
+                    }
 
+                    @Override
+                    public void onSingleDataLoaded(Void object) {
+
+                    }
+
+                    @Override
+                    public void onMultipleDataLoaded(List<Void> objects) {
+
+                    }
+                });
+            }
+        });
         update_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,6 +197,8 @@ public class ProfileFragment extends Fragment {
                                  UserManager.setName(getContext(), new_name);
                                  if(!isPasswordUpdated&&!isNumberUpdated){
                                      Utils.toast(getContext(), getString(R.string.profile_updated));
+                                     makeNonEditable();
+                                     disableLoading();
                                  }else{
                                      complexServerAction(oldPwd);
                                  }

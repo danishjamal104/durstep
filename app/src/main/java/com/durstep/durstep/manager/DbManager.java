@@ -68,7 +68,7 @@ public class DbManager {
     }
     public static void deletePushToken(Context context, FirebaseTask<Void> firebaseTask){
         // this method is design to be called only by AuthManager
-        userRef.update("push_token", null).addOnCompleteListener(new OnCompleteListener<Void>() {
+        getUserRef().update("push_token", null).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){

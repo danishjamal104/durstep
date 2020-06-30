@@ -123,5 +123,17 @@
         android:visibility="gone"
         app:SpinKit_Color="@color/grey" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/profile_logOut_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="16dp"
+        android:scaleY="0.7"
+        android:scaleX="0.7"
+        android:src="@drawable/ic_logout"
+        android:backgroundTint="@color/colorPrimaryDark"/>
+
 
 </RelativeLayout>
