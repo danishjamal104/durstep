@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/auth_til_theme"
+        android:id="@+id/new_pay_amount_til"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:hint="@string/order_amount"
+        app:endIconMode="clear_text"
+        app:startIconDrawable="@drawable/ic_rupee">
+
+        <com.google.android.material.textfield.TextInputEditText
+            style="@style/auth_til_et_theme"
+            android:id="@+id/new_pay_amount_til_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberSigned" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/new_pay_topCard_separator_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/new_pay_amount_til"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="8dp">
+        <TextView
+            android:id="@+id/stats_orderListHeading_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_users"
+            android:textSize="14sp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/new_pay_user_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/new_pay_topCard_separator_ll"
+        tools:listitem="@layout/simple_user_list_item"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/new_pay_cancel_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/colorPrimary"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/new_pay_submit_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/colorPrimary"/>
+    </LinearLayout>
+
+
+
+</RelativeLayout>

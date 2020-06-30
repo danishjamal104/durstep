@@ -20,6 +20,7 @@ import com.durstep.durstep.interfaces.ListItemClickListener;
 import com.durstep.durstep.interfaces.SubscriptionLoadingTask;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.model.ActiveDelivery;
+import com.durstep.durstep.model.AppMode;
 import com.durstep.durstep.model.Subscription;
 import com.durstep.durstep.model.User;
 import com.google.android.material.button.MaterialButton;
@@ -46,6 +47,8 @@ public class NewDeliveryActivity extends BaseActivity {
     List<Subscription> subscriptionList = new ArrayList<>();
     List<Chip> chips=new ArrayList<>();
 
+    int appMode;
+    String userId;
     int isModify;
 
     @Override
@@ -56,15 +59,24 @@ public class NewDeliveryActivity extends BaseActivity {
         init();
     }
     void init(){
+        appMode = AppMode.getAppMode(this);
         search_til = findViewById(R.id.new_delivery_search_number_name_til);
         selected_subscription_cg = findViewById(R.id.new_delivery_selected_subscription_cg);
         confirm_bt = findViewById(R.id.new_delivery_confirm_mbt);
         user_rv = findViewById(R.id.new_delivery_user_list_rv);
         loadPrevious_srl = findViewById(R.id.new_delivery_loadPrev_srl);
         progressBar = findViewById(R.id.new_delivery_progress_pb);
+
         setUp();
     }
     void setUp(){
+        if(appMode==AppMode.DISTRIBUTOR){
+            userId = DbManager.getUid();
+        }else{
+            userId = getIntent().getExtras().getString("dId", "");
+            isModify = 1;
+        }
+
         user_rv.setHasFixedSize(false);
         user_rv.setLayoutManager(new LinearLayoutManager(this));
 
@@ -116,7 +128,7 @@ public class NewDeliveryActivity extends BaseActivity {
         }
     }
     void loadPreviousDelivery(){
-        DbManager.getPreviousDeliveryOfDistributor(DbManager.getUid(), new SubscriptionLoadingTask() {
+        DbManager.getPreviousDeliveryOfDistributor(userId, new SubscriptionLoadingTask() {
             @Override
             public void onSubscriptionLoaded(List<Pair<Subscription, User>> pairList) {
                 for(Pair<Subscription, User> p: pairList){
@@ -164,7 +176,7 @@ public class NewDeliveryActivity extends BaseActivity {
         activeDelivery.setDelivered_list(new ArrayList<>());
         activeDelivery.setLocation(null);
 
-        DbManager.createDelivery(DbManager.getUid(), activeDelivery, new FirebaseTask<Void>() {
+        DbManager.createDelivery(userId, activeDelivery, new FirebaseTask<Void>() {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if(isSuccess){

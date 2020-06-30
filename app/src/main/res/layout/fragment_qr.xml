@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.QrFragment">
+    tools:context=".fragment.qr.QrFragment">
 
     <FrameLayout
         android:id="@+id/qr_scan_content_fl"

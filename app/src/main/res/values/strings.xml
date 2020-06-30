@@ -189,6 +189,7 @@
     <string name="menu_make_client">Make Client</string>
     <string name="menu_make_distributor">Make Distributor</string>
     <string name="menu_show_stats">Show Stats</string>
+    <string name="menu_schedule_delivery">Schedule Delivery</string>
 
     <!--distributor stats fragment-->
     <string name="allotted_delivery">Allotted Delivery</string>
@@ -202,6 +203,9 @@
 
     <string name="payment">Payment</string>
 
+    <!--new payment dialog-->
+    <string name="select_users">Select User</string>
+    <string name="invalid_amount">Invalid Amount</string>
 
     <!--month-->
     <string name="jan">January</string>
@@ -216,6 +220,5 @@
     <string name="oct">October</string>
     <string name="nov">November</string>
     <string name="dec">December</string>
-
 
 </resources>

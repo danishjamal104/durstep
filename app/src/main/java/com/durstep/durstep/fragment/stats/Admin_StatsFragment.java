@@ -19,7 +19,9 @@ import android.widget.TextView;
 import com.durstep.durstep.R;
 import com.durstep.durstep.adapter.OrderAdapter;
 import com.durstep.durstep.adapter.PaymentAdapter;
+import com.durstep.durstep.admin.NewPaymentDialog;
 import com.durstep.durstep.helper.Utils;
+import com.durstep.durstep.interfaces.FirebaseTask;
 import com.durstep.durstep.interfaces.StatsLoadingTask;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.model.Order;
@@ -44,6 +46,7 @@ public class Admin_StatsFragment extends Fragment {
     PaymentAdapter adapter;
     Map<String, Object> md;
 
+    String month=null;
     FloatingActionButton add_payment_fab;
 
     public Admin_StatsFragment() {
@@ -69,6 +72,7 @@ public class Admin_StatsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        add_payment_fab.setEnabled(false);
         payment_rv.setHasFixedSize(false);
         payment_rv.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new PaymentAdapter(getContext());
@@ -83,7 +87,28 @@ public class Admin_StatsFragment extends Fragment {
         add_payment_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               NewPaymentDialog dialog = new NewPaymentDialog(getContext(), month);
+                dialog.start(progressBar, new FirebaseTask<Void>() {
+                    @Override
+                    public void onComplete(boolean isSuccess, String error) {
+                        if(!isSuccess){
+                            Utils.longToast(getContext(), error);
+                        }else{
+                            Utils.toast(getContext(), getString(R.string.success));
+                        }
+                        progressBar.setVisibility(View.GONE);
+                    }
 
+                    @Override
+                    public void onSingleDataLoaded(Void object) {
+
+                    }
+
+                    @Override
+                    public void onMultipleDataLoaded(List<Void> objects) {
+
+                    }
+                });
             }
         });
 
@@ -106,9 +131,13 @@ public class Admin_StatsFragment extends Fragment {
     }
 
     void loadPaymentsOfMonth(String month){
+        if(month==null){
+            this.month = Utils.getDateTimeInFormat(new Timestamp(new Date()), "MMM");
+        }else{
+            this.month = month;
+        }
         add_payment_fab.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
-        String uid = DbManager.getUid();
         DbManager.loadMonthPayments(month, new StatsLoadingTask<Payment>() {
             @Override
             public void onComplete(boolean isSuccess, String error) {
@@ -152,7 +181,7 @@ public class Admin_StatsFragment extends Fragment {
         payment_total_tv.setText(String.format("%s: ₹ %s", getContext().getString(R.string.total_payment), total_pay));
         payment_paid_tv.setText(String.format("%s: ₹ %s", getContext().getString(R.string.total_amount_paid), amount_due));
         payment_due_tv.setText(String.format("%s: ₹ %s", getString(R.string.total_amount_due), amount_paid));
-        month_chip.setText(Utils.getDateTimeInFormat(new Timestamp(new Date()), "MMM").toUpperCase());
+        month_chip.setText(month.substring(0, 3).toUpperCase());
         add_payment_fab.setEnabled(true);
     }
 

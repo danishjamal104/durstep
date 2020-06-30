@@ -13,14 +13,14 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.durstep.durstep.fragment.home.Admin_HomeFragment;
 import com.durstep.durstep.fragment.home.Distributor_HomeFragment;
 import com.durstep.durstep.fragment.home.HomeFragment;
 import com.durstep.durstep.fragment.ProfileFragment;
-import com.durstep.durstep.fragment.QrFragment;
+import com.durstep.durstep.fragment.qr.Dist_QrFragment;
+import com.durstep.durstep.fragment.qr.QrFragment;
 import com.durstep.durstep.fragment.stats.Admin_StatsFragment;
 import com.durstep.durstep.fragment.stats.Distributor_StatsFragment;
 import com.durstep.durstep.fragment.stats.StatsFragment;
@@ -38,9 +38,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.GeoPoint;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
@@ -125,7 +122,11 @@ public class MainActivity extends BaseActivity {
         scan_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openFragment(new QrFragment());
+                if(appMode==AppMode.CLIENT){
+                    openFragment(new QrFragment());
+                }else{
+                    openFragment(new Dist_QrFragment());
+                }
                 selectMenu(Menu.QR);
             }
         });

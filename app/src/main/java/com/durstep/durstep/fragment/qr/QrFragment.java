@@ -1,4 +1,4 @@
-package com.durstep.durstep.fragment;
+package com.durstep.durstep.fragment.qr;
 
 import android.Manifest;
 import android.animation.Animator;

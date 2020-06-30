@@ -1,5 +1,6 @@
 package com.durstep.durstep.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
+import com.durstep.durstep.NewDeliveryActivity;
 import com.durstep.durstep.R;
 import com.durstep.durstep.adapter.UserAdapter;
 import com.durstep.durstep.admin.StatsDialog;
@@ -90,6 +92,11 @@ public class Admin_HomeFragment extends Fragment {
                         break;
                     case R.id.distributor_make_client:
                         changeUserType(user, User.CLIENT);
+                        break;
+                    case R.id.distributor_schedule_delivery:
+                        Intent intent = new Intent(getActivity(), NewDeliveryActivity.class);
+                        intent.putExtra("dId", user.getUid());
+                        startActivity(intent);
                         break;
                     default:
                         StatsDialog dialog = new StatsDialog(getContext(), user);

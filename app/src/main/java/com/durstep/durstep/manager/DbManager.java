@@ -27,8 +27,10 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
@@ -244,7 +246,8 @@ public class DbManager {
                 });
     }
     public static void getPreviousDeliveryOfDistributor(String id, SubscriptionLoadingTask loadingTask){
-        getmRef().document("user/"+id+"/pd/pd").get()
+        String doc = "user/"+id+"/pd/pd";
+        getmRef().document(doc).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -409,6 +412,36 @@ public class DbManager {
         String id = getmRef().collection("payment").document().getId();
         payment.setId(id);
         getmRef().document(String.format("payment/%s",id)).set(payment).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    fbTask.onComplete(true, null);
+                }else{
+                    fbTask.onComplete(false, task.getException().getLocalizedMessage());
+                }
+            }
+        });
+    }
+    public static void addPayments(List<Payment> paymentList, FirebaseTask<Void> fbTask){
+        getmRef().runTransaction(new Transaction.Function<Void>() {
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                CollectionReference pRef = getmRef().collection("payment");
+                for(Payment p: paymentList){
+                    DocumentReference ref = pRef.document();
+                    p.setId(ref.getId());
+                    transaction.set(ref, p);
+
+                    DocumentReference currentUserRef = p.getUser().collection("stats").document(p.getMonth());
+                    transaction.update(currentUserRef, "payments", FieldValue.arrayUnion(p.getAmount()));
+
+                    DocumentReference adminRef = getAdminRef().collection("stats").document(p.getMonth());
+                    transaction.update(adminRef, "payments", FieldValue.arrayUnion(ref));
+                }
+                return null;
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -619,6 +652,9 @@ public class DbManager {
             userRef = getmRef().document("user/"+getUid());
         }
         return userRef;
+    }
+    public static DocumentReference getAdminRef(){
+        return getmRef().document("user/"+Utils.ADMIN_ID);
     }
 
     public static DocumentReference getNewUid(){

@@ -214,6 +214,19 @@ public class Utils {
         return result;
     }
 
+    public static Bitmap getLitreBitmap(String litre){
+        Bitmap result = null;
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        try {
+            BitMatrix bitMatrix = multiFormatWriter.encode(litre, BarcodeFormat.QR_CODE, 400, 400);
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            result = barcodeEncoder.createBitmap(bitMatrix);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public static boolean isDouble(String text){
         try{
             double a = Double.parseDouble(text);

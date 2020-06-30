@@ -126,11 +126,15 @@ public class StatsFragment extends Fragment {
         int orderSize = ((List<DocumentReference>) md.get("orders")).size();
         double consumption = Double.parseDouble(md.get("consumption").toString());
         double due = Double.parseDouble(md.get("due").toString());
-        String payment;
+        Double payment = 0.0;
+        List<Double> payments;
         try{
-            payment = md.get("paid").toString();
+            payments = ((List<Double>) md.get("payments"));
+            for(Double d: payments){
+                payment+=d;
+            }
         }catch (Exception e){
-            payment = "No payment made";
+            payment = 0.0;
         }
 
         total_order_tv.setText(String.format("%s: %s", getString(R.string.total_order), orderSize));

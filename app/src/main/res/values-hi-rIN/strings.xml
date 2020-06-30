@@ -152,4 +152,7 @@
     <string name="payment">पेमेंट</string>
     <string name="modify">संशोधित</string>
     <string name="subscriptions">सदस्यता</string>
+    <string name="menu_schedule_delivery">अनुसूची डिलीवरी</string>
+    <string name="select_users">सेलेकट यूसर​</string>
+    <string name="invalid_amount">अवैध राशि</string>
 </resources>
