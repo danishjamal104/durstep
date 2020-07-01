@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.home.Distributor_HomeFragment">
+    tools:context=".fragment.home.Distributor_HomeFragment"
+    android:background="@drawable/gradient_bg">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/dist_home_deliveryCard_cv"

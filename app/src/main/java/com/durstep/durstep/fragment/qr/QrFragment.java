@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -32,6 +33,7 @@ import com.google.gson.Gson;
 import com.google.zxing.Result;
 
 import java.util.Map;
+import java.util.Objects;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -43,6 +45,8 @@ public class QrFragment extends Fragment {
     ViewGroup frameLayout;
 
     ZXingScannerView mScannerView;
+
+    ProgressBar progressBar;
 
     public QrFragment() {
         // Required empty public constructor
@@ -56,6 +60,7 @@ public class QrFragment extends Fragment {
         info_tv = view.findViewById(R.id.qr_scan_info_tv);
         frameLayout = view.findViewById(R.id.qr_scan_content_fl);
         mScannerView = new ZXingScannerView(getContext());
+        progressBar = view.findViewById(R.id.qr_progress_pb);
         return view;
     }
 
@@ -65,8 +70,9 @@ public class QrFragment extends Fragment {
         mScannerView.setResultHandler(new ZXingScannerView.ResultHandler() {
             @Override
             public void handleResult(Result rawResult) {
-                qrResult(rawResult.getText());
                 stopCamera();
+                qrResult(rawResult.getText());
+                frameLayout.removeAllViews();
             }
         });
         startCamera();
@@ -81,9 +87,10 @@ public class QrFragment extends Fragment {
         if(!Utils.isValidLitre(qrRes)){
             return;
         }
+        progressBar.setVisibility(View.VISIBLE);
         double litre = Double.parseDouble(qrRes);
 
-        RequestQueue queue = Volley.newRequestQueue(getContext());
+        RequestQueue queue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()));
         String url = String.format(Utils.ORDER_RECEIVE_URL, DbManager.getUid(), litre);
 
         Utils.log(url);
@@ -96,11 +103,12 @@ public class QrFragment extends Fragment {
                         // Display the first 500 characters of the response string.
                         com.durstep.durstep.model.Response result = unpack(response);
                         if(result.getStatus()==204){
-                            NotifyManager.sendDeliveryConfirmation(getContext(), result.getData(), litre);
+                            NotifyManager.sendDeliveryConfirmation(getActivity(), result.getData(), litre);
                         }
                         Utils.log(""+result.getStatus());
                         Utils.log(result.getMsg());
                         Utils.log(""+result.getData());
+                        progressBar.setVisibility(View.GONE);
                         showOrderReceiveDialog(result);
                     }
                 }, new Response.ErrorListener() {
@@ -109,6 +117,7 @@ public class QrFragment extends Fragment {
                 if (error.getLocalizedMessage() != null) {
                     Utils.log(error.getLocalizedMessage());
                 }
+                progressBar.setVisibility(View.GONE);
             }
         });
 

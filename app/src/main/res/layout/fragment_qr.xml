@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.qr.QrFragment">
+    tools:context=".fragment.qr.QrFragment"
+    android:background="@drawable/gradient_bg">
 
     <FrameLayout
         android:id="@+id/qr_scan_content_fl"
@@ -23,5 +25,15 @@
         android:textSize="18sp"
         android:textColor="@color/black"
         android:fontFamily="@font/roboto_bold_italic" />
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/qr_progress_pb"
+        style="@style/SpinKitView.Large.DoubleBounce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/grey"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 
 </RelativeLayout>

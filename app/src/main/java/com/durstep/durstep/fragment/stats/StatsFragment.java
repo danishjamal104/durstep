@@ -108,8 +108,9 @@ public class StatsFragment extends Fragment {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if (isSuccess && error==null){
-                    Utils.toast(getActivity(), "No orders this month");
                     emptyMetaData();
+                }else if(!isSuccess && error==null){
+                    Utils.toast(getActivity(), "No orders this month");
                 }else{
                     Utils.longToast(getContext(), error);
                 }
@@ -145,7 +146,7 @@ public class StatsFragment extends Fragment {
 
         total_order_tv.setText(String.format("%s: %s", getString(R.string.total_order), orderSize));
         consumption_tv.setText(String.format("%s: %s %s", getString(R.string.total_consumption), consumption, getString(R.string.litre_abbreviation)));
-        payment_due_tv.setText(String.format("%s: ₹ %s", getString(R.string.total_amount_due), due));
+        payment_due_tv.setText(String.format("%s: ₹ %s", getString(R.string.total_amount_due), due-payment));
         payment_paid_tv.setText(String.format("%s: ₹ %s", getString(R.string.total_amount_paid), payment));
         month_chip.setText(month.substring(0, 3).toUpperCase());
     }

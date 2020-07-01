@@ -463,13 +463,16 @@ public class DbManager {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if(task.isSuccessful()){
                             Map<String, Object> data = task.getResult().getData();
-                            statsLoadingTask.onMetaDataLoaded(data);
                             if(data==null){
                                 statsLoadingTask.onComplete(true, null);
                             }else {
+                                statsLoadingTask.onMetaDataLoaded(data);
                                 List<DocumentReference> paymentsRef = (List<DocumentReference>) data.get("payments");
-                                if(paymentsRef.size()==0){
-                                    statsLoadingTask.onComplete(true, null);
+                                if(paymentsRef==null){
+                                    statsLoadingTask.onComplete(false, null);
+                                    return;
+                                }else if(paymentsRef.size()==0){
+                                    statsLoadingTask.onComplete(false, null);
                                     return;
                                 }
                                 getmRef().runTransaction(new Transaction.Function<List<Payment>>() {
@@ -519,7 +522,7 @@ public class DbManager {
                                 statsLoadingTask.onMetaDataLoaded(data);
                                 List<DocumentReference> ordersRef = (List<DocumentReference>) data.get("orders");
                                 if(ordersRef.size()==0){
-                                    statsLoadingTask.onComplete(true, null);
+                                    statsLoadingTask.onComplete(false, null);
                                     return;
                                 }
                                 getmRef().runTransaction(new Transaction.Function<List<Order>>() {

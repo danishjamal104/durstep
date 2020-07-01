@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.ProfileFragment">
+    tools:context=".fragment.ProfileFragment"
+    android:background="@drawable/gradient_bg">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/profile_name_til"

@@ -107,6 +107,8 @@ public class NewPaymentDialog {
         double rupee = Double.parseDouble(amount);
         amount_til.setErrorEnabled(false);
 
+
+
         String doc_name;
         if(month!=null){
             doc_name = String.format("%s_%s", month.substring(0, 3).toUpperCase(), Utils.getDateTimeInFormat(new Timestamp(new Date()), "yyyy"));

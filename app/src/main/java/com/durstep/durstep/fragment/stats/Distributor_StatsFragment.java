@@ -108,8 +108,9 @@ public class Distributor_StatsFragment extends Fragment {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if (isSuccess && error==null){
-                    Utils.toast(getContext(), "No orders this month");
-
+                    emptyMetaData();
+                }else if(!isSuccess && error==null){
+                    Utils.toast(getActivity(), "No orders this month");
                 }else{
                     Utils.longToast(getContext(), error);
                 }
@@ -117,11 +118,7 @@ public class Distributor_StatsFragment extends Fragment {
             }
             @Override
             public void onMetaDataLoaded(Map<String, Object> md) {
-                if(md==null){
-                    emptyMetaData();
-                }else{
-                    setMetaData(md);
-                }
+                setMetaData(md);
 
             }
             @Override
@@ -134,15 +131,24 @@ public class Distributor_StatsFragment extends Fragment {
 
     void setMetaData(Map<String, Object> metaData){
         this.md = metaData;
-        String orderSize = ""+((List<DocumentReference>) md.get("orders")).size();
         String allotted_delivery = (md.get("allotted_delivery").toString());
         String litre_delivered = (md.get("litre_delivered").toString());
         String order_delivered = (md.get("order_delivered").toString());
 
+        String pendingDel;
+        try{
+            int ad = Integer.parseInt(allotted_delivery);
+            int od = Integer.parseInt(order_delivered);
+            int pd = ad-od;
+            pendingDel = String.format("%s", pd);
+        }catch (Exception e){
+            pendingDel = getString(R.string.server_error);
+        }
+
         total_order_tv.setText(String.format("%s: %s", getString(R.string.allotted_delivery), allotted_delivery));
         consumption_tv.setText(String.format("%s: %s %s", getString(R.string.litre_delivered), litre_delivered, getString(R.string.litre_abbreviation)));
         payment_due_tv.setText(String.format("%s: %s", getString(R.string.order_delivered), order_delivered));
-        payment_paid_tv.setText(String.format("%s: %s", getString(R.string.pending_delivery), orderSize));
+        payment_paid_tv.setText(String.format("%s: %s", getString(R.string.pending_delivery), pendingDel));
         month_chip.setText(month.substring(0, 3).toUpperCase());
 }
 

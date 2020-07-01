@@ -1,5 +1,6 @@
 package com.durstep.durstep.manager;
 
+import android.app.Activity;
 import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,7 +30,7 @@ public class NotifyManager {
     public final static String NEW_SUBSCRIPTION_TITLE = "%s subscribed to new service";
     public final static String NEW_SUBSCRIPTION_MSG = "%s litres to be delivered at %s hours. For more details contact %s";
 
-    public static void send(Context context, String url){
+    public static void send(Activity context, String url){
         RequestQueue queue = Volley.newRequestQueue(context);
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -51,12 +52,12 @@ public class NotifyManager {
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
-    public static void send(Context context, String to, String title, String msg){
+    public static void send(Activity context, String to, String title, String msg){
         RequestQueue queue = Volley.newRequestQueue(context);
         String url =getUrl(to, title, msg);
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -76,7 +77,7 @@ public class NotifyManager {
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
-    public static void senMultiple(Context context, List<String> to, String title, String msg, int type){
+    public static void senMultiple(Activity context, List<String> to, String title, String msg, int type){
         RequestQueue queue = Volley.newRequestQueue(context);
 
         for(String uId: to){
@@ -105,12 +106,12 @@ public class NotifyManager {
         return String.format(String.format(Utils.NOTIFICATION_URL, to, title, msg, 1)+"&extra=%s, %s", name, number);
     }
 
-    public static void sendDeliveryStartNotification(Context context, List<String> to){
+    public static void sendDeliveryStartNotification(Activity context, List<String> to){
         User distributor = UserManager.getCurrentUser(context);
         String msg = String.format(DELIVERY_START_MSG, distributor.getName(), distributor.getNumber());
         senMultiple(context, to, DELIVERY_START_TITLE, msg, 1);
     }
-    public static void sendLocationUpdate(Context context, ActiveDelivery delivery){
+    public static void sendLocationUpdate(Activity context, ActiveDelivery delivery){
         List<String> to = new ArrayList<>();
         String title = "Delivery Update";
         String msg = "Location updated. Click here to track";
@@ -119,7 +120,7 @@ public class NotifyManager {
         }
         senMultiple(context, to, title, msg, 0);
     }
-    public static void sendDeliveryConfirmation(Context context, String distId, double amount){
+    public static void sendDeliveryConfirmation(Activity context, String distId, double amount){
         String msg = String.format(DELIVERY_CONFIRM_MSG, amount);
 
         String url = getType1Url(distId, DELIVERY_CONFIRM_TITLE,
@@ -128,11 +129,11 @@ public class NotifyManager {
         send(context, url);
     }
 
-    public static void notifyAdmin_newUser(Context context, String name, String number){
+    public static void notifyAdmin_newUser(Activity context, String name, String number){
         send(context, Utils.ADMIN_ID, NEW_USER_REGISTER_TITLE, String.format(NEW_USER_REGISTER_MSG, name, number));
     }
 
-    public static void notifyAdmin_newSubscription(Context context, Subscription s){
+    public static void notifyAdmin_newSubscription(Activity context, Subscription s){
         String name = UserManager.getName(context);
         String number = UserManager.getNumber(context);
         String title = String.format(NEW_SUBSCRIPTION_TITLE, name);

@@ -142,8 +142,9 @@ public class Admin_StatsFragment extends Fragment {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if (isSuccess && error==null){
-                    Utils.toast(getContext(), "No orders this month");
-
+                    emptyMetaData();
+                }else if(!isSuccess && error==null){
+                    Utils.toast(getActivity(), "No payment this month");
                 }else{
                     Utils.longToast(getContext(), error);
                 }
@@ -151,11 +152,7 @@ public class Admin_StatsFragment extends Fragment {
             }
             @Override
             public void onMetaDataLoaded(Map<String, Object> md) {
-                if(md==null){
-                    emptyMetaData();
-                }else{
-                    setMetaData(md);
-                }
+                setMetaData(md);
             }
 
             @Override
@@ -173,14 +170,20 @@ public class Admin_StatsFragment extends Fragment {
     void setMetaData(Map<String, Object> metaData){
         this.md = metaData;
         double total_pay = Double.parseDouble(md.get("total_amount").toString());
-        double amount_paid = Double.parseDouble(md.get("amount_paid").toString());
+        double amount_paid;
+        try{
+            amount_paid = Double.parseDouble(md.get("amount_paid").toString());
+        }catch (Exception e){
+            amount_paid = 0;
+        }
+
         double amount_due = total_pay-amount_paid;
         double consumption = Double.parseDouble(md.get("consumption").toString());
 
         consumption_tv.setText(String.format("%s: %s %s", getContext().getString(R.string.total_consumption), consumption, getContext().getString(R.string.litre_abbreviation)));
         payment_total_tv.setText(String.format("%s: ₹ %s", getContext().getString(R.string.total_payment), total_pay));
-        payment_paid_tv.setText(String.format("%s: ₹ %s", getContext().getString(R.string.total_amount_paid), amount_due));
-        payment_due_tv.setText(String.format("%s: ₹ %s", getString(R.string.total_amount_due), amount_paid));
+        payment_paid_tv.setText(String.format("%s: ₹ %s", getContext().getString(R.string.total_amount_paid), amount_paid));
+        payment_due_tv.setText(String.format("%s: ₹ %s", getString(R.string.total_amount_due), amount_due));
         month_chip.setText(month.substring(0, 3).toUpperCase());
         add_payment_fab.setEnabled(true);
     }

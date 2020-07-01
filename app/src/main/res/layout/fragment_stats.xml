@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.stats.StatsFragment">
+    tools:context=".fragment.stats.StatsFragment"
+    android:background="@drawable/gradient_bg">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/stats_ordersCard_cv"

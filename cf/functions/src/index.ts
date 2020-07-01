@@ -44,7 +44,7 @@ functions.https.onRequest((req, res) => {
     const to = req.query.to
     const amountSt = req.query.l
     const amount: number = parseFloat(<string>amountSt)
-    return admin.firestore().collection(`user/${to}/subscriptions/`).orderBy('sDate', 'desc').get()
+    admin.firestore().collection(`user/${to}/subscriptions/`).orderBy('sDate', 'desc').get()
     .then(querySnap => {
         // complete function by getting data
         if(querySnap.empty){
@@ -54,16 +54,19 @@ functions.https.onRequest((req, res) => {
         let active_sub
         let isAnyActive = false
         for (let i = 0; i < docs.length; i++) {
-            const element = docs[i];
-            if(element.data().active!=null){
+            const element = docs[i].data();
+            const active = element.active
+            if(active!==null){
                 isAnyActive = true
-                active_sub = element.data()
+                active_sub = element
                 break
             }
         }
+        console.log(`Variable isAnyActive: ${isAnyActive}`)
         if(!isAnyActive){
             return res.send({status: 202,msg: 'No Active Delivery',data: null})
         }
+        console.log(`Variable past if condition isAnyActive: ${isAnyActive}`)
         return (<admin.firestore.DocumentReference> active_sub?.active).get()
         .then(adt => {
             //adt = active_delivery 
@@ -108,24 +111,31 @@ functions.https.onRequest((req, res) => {
                     location: dt?.location
                 }
                 let isDeliveryPending = true
-                let promise: any
+                let promise: any = []
                 if(newDt.pending==0){
                     isDeliveryPending = false
-                    promise = adt.ref.delete()
+                    promise.push(adt.ref.delete())
                 }else{
-                    promise = adt.ref.update(newDt)
+                    promise.push(adt.ref.update(newDt))
                 }
 
-                return promise
+                promise.push(
+                    admin.firestore().doc(`user/${to}/subscriptions/${active_sub?.sId}`)
+                    .update('active', null))
+
+                return Promise.all(promise)
                 .then(()=>{
-                    return admin.firestore().doc(`user/${to}/subscriptions/${active_sub?.sId}`).update('active', null)
-                    .then(()=>{
-                        return res.send({status: isDeliveryPending?200:204,msg: 'Order Delivered',data: adt.id})
-                    }).catch((e) => {return res.send({status: 404,msg: 'Error Setting Active To Null!!',data: e})})
-                }).catch((e) => {return res.send({status: 404,msg: 'Error Updating Active Delivery!!',data: e})})
-            }) .catch((e) => {return res.send({status: 404,msg: 'Error Creating Order!!',data: e})})
-        }).catch((e) => {return res.send({status: 404,msg: 'Delivery Not Found!!',data: e})})
-    }).catch((e) => {return res.send({status: 404,msg: 'Invalid User!!',data: e})})
+                    return res.send({status: isDeliveryPending?200:204,msg: 'Order Delivered',data: adt.id})
+                }).catch((e) => {console.log(e)
+                    return res.send({status: 404,msg: 'Error Updating Active Delivery!! and  Setting Active To Null!!',data: e})})
+            }) .catch((e) => {console.log(e)
+                return res.send({status: 404,msg: 'Error Creating Order!!',data: e})})
+        }).catch((e) => {
+            console.log(e)
+            return res.send({status: 404,msg: 'Delivery Not Found!!',data: e})})
+    }).catch((e) => {
+        console.log(e)
+        return res.send({status: 404,msg: 'Invalid User!!',data: e})})
 })
 export const onNewDeliveryCreated = 
 functions.firestore.document('active_delivery/{distributorId}')
@@ -161,7 +171,7 @@ functions.firestore.document('orders/{oId}')
     const date_in_india = new Date(delhi)
 
     const doc_name = month[date_in_india.getMonth()]+'_'+date_in_india.getFullYear()
-    console.log(doc_name)
+    //console.log(doc_name)
 
     return admin.firestore().doc('admin/meta-data').get()
     .then(snap => {
@@ -205,7 +215,7 @@ functions.firestore.document('active_delivery/{distributorId}')
 
     const data ={
         allotted_delivery: admin.firestore.FieldValue.increment(ad.total),
-        order_delivered: admin.firestore.FieldValue.increment(ad.delivered),
+        order_delivered: admin.firestore.FieldValue.increment(ad.delivered+1),
     }
 
     return admin.firestore().doc(`user/${adt.id}/stats/${doc_name}`)

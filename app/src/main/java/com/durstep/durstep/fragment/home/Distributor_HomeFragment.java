@@ -45,6 +45,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
@@ -233,7 +234,7 @@ public class Distributor_HomeFragment extends Fragment {
                     public void onComplete(boolean isSuccess, String error) {
                         if(isSuccess){
                             Utils.toast(getContext(), getString(R.string.success));
-                            NotifyManager.sendLocationUpdate(getContext(), activeDelivery);
+                            NotifyManager.sendLocationUpdate(getActivity(), activeDelivery);
                             adapter.clear();
                             getCurrentActiveDelivery();
                         }else{
@@ -259,7 +260,7 @@ public class Distributor_HomeFragment extends Fragment {
         for(DocumentReference reference: activeDelivery.getSubscription_list()){
             to.add(Utils.getUserIdFromSubscriptionRef(reference));
         }
-        NotifyManager.sendDeliveryStartNotification(getContext(), to);
+        NotifyManager.sendDeliveryStartNotification(getActivity(), to);
     }
 
 
@@ -344,15 +345,28 @@ public class Distributor_HomeFragment extends Fragment {
         cancel_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DbManager.getmRef().document("active_delivery/"+DbManager.getUid()).delete()
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-
+                enableLoading();
+                DocumentReference adRef = DbManager.getmRef().document("active_delivery/"+DbManager.getUid());
+                adRef.update("delivered", FieldValue.increment(-1))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            adRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    adapter.clear();
+                                    getCurrentActiveDelivery();
+                                    if(task.isSuccessful()){
+                                        Utils.toast(getContext(), getString(R.string.success));
+                                    }else{
+                                        Utils.longToast(getContext(), ""+task.getException().getLocalizedMessage());
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+                    }
+                });
             }
         });
     }

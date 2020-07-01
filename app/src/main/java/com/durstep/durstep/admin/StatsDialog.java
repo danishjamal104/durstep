@@ -39,6 +39,8 @@ public class StatsDialog {
     OrderAdapter adapter;
     Map<String, Object> md;
 
+    String month=null;
+
     Dialog v;
     Context context;
     User user;
@@ -96,11 +98,18 @@ public class StatsDialog {
 
     void loadOrderOfMonth(String month){
         progressBar.setVisibility(View.VISIBLE);
+        if(month==null){
+            this.month = Utils.getDateTimeInFormat(new Timestamp(new Date()), "MMM");
+        }else{
+            this.month = month;
+        }
         String uid = user.getUid();
         DbManager.loadMonthOrder(uid, new StatsLoadingTask<Order>() {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if (isSuccess && error==null){
+                    emptyMetaData();
+                }else if(!isSuccess && error==null){
                     Utils.toast(context, "No orders this month");
                 }else{
                     Utils.longToast(context, error);
@@ -109,11 +118,7 @@ public class StatsDialog {
             }
             @Override
             public void onMetaDataLoaded(Map<String, Object> md) {
-                if(md==null){
-                    emptyMetaData();
-                }else{
-                    setMetaData(md);
-                }
+                setMetaData(md);
             }
             @Override
             public void onListLoaded(List<Order> objects) {
@@ -136,38 +141,51 @@ public class StatsDialog {
         int orderSize = ((List<DocumentReference>) md.get("orders")).size();
         double consumption = Double.parseDouble(md.get("consumption").toString());
         double due = Double.parseDouble(md.get("due").toString());
-        String payment;
+        Double payment = 0.0;
+        List<Double> payments;
         try{
-            payment = Objects.requireNonNull(md.get("paid")).toString();
+            payments = ((List<Double>) md.get("payments"));
+            for(Double d: payments){
+                payment+=d;
+            }
         }catch (Exception e){
-            payment = "No payment made";
+            payment = 0.0;
         }
 
         total_order_tv.setText(String.format("%s: %s", context.getString(R.string.total_order), orderSize));
         consumption_tv.setText(String.format("%s: %s %s", context.getString(R.string.total_consumption), consumption, context.getString(R.string.litre_abbreviation)));
-        payment_due_tv.setText(String.format("%s: ₹ %s", context.getString(R.string.total_amount_due), due));
+        payment_due_tv.setText(String.format("%s: ₹ %s", context.getString(R.string.total_amount_due), due-payment));
         payment_paid_tv.setText(String.format("%s: ₹ %s", context.getString(R.string.total_amount_paid), payment));
-        month_chip.setText(Utils.getDateTimeInFormat(new Timestamp(new Date()), "MMM").toUpperCase());
+        month_chip.setText(month.substring(0, 3).toUpperCase());
     }
     void setDistributorMetaData(Map<String, Object> metaData){
         this.md = metaData;
-        String orderSize = ""+((List<DocumentReference>) md.get("orders")).size();
         String allotted_delivery = (md.get("allotted_delivery").toString());
         String litre_delivered = (md.get("litre_delivered").toString());
         String order_delivered = (md.get("order_delivered").toString());
 
+        String pendingDel;
+        try{
+            int ad = Integer.parseInt(allotted_delivery);
+            int od = Integer.parseInt(order_delivered);
+            int pd = ad-od;
+            pendingDel = String.format("%s", pd);
+        }catch (Exception e){
+            pendingDel = context.getString(R.string.server_error);
+        }
+
         total_order_tv.setText(String.format("%s: %s", context.getString(R.string.allotted_delivery), allotted_delivery));
         consumption_tv.setText(String.format("%s: %s %s", context.getString(R.string.litre_delivered), litre_delivered, context.getString(R.string.litre_abbreviation)));
         payment_due_tv.setText(String.format("%s: %s", context.getString(R.string.order_delivered), order_delivered));
-        payment_paid_tv.setText(String.format("%s: %s", context.getString(R.string.pending_delivery), orderSize));
-        month_chip.setText(Utils.getDateTimeInFormat(new Timestamp(new Date()), "MMM").toUpperCase());
+        payment_paid_tv.setText(String.format("%s: %s", context.getString(R.string.pending_delivery), pendingDel));
+        month_chip.setText(month.substring(0, 3).toUpperCase());
     }
 
     void emptyMetaData(){
         total_order_tv.setText(String.format("%s: %s", context.getString(R.string.total_order), ""));
         consumption_tv.setText(String.format("%s: %s", context.getString(R.string.total_consumption), ""));
-        payment_due_tv.setText(String.format("%s: ₹ %s", context.getString(R.string.total_amount_due), ""));
-        payment_paid_tv.setText(String.format("%s: ₹ %s", context.getString(R.string.total_amount_paid), ""));
+        payment_due_tv.setText(String.format("%s: %s", context.getString(R.string.total_amount_due), ""));
+        payment_paid_tv.setText(String.format("%s: %s", context.getString(R.string.total_amount_paid), ""));
     }
 
 }
