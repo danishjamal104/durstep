@@ -44,10 +44,7 @@ import java.util.Map;
 
 public class DbManager {
 
-    private static FirebaseAuth mAuth;
-    private static FirebaseUser user;
-    private static FirebaseFirestore mRef;
-    private static DocumentReference userRef;
+
 
     public static void updatePushToken(Context context){
         // this method is design to be called only by TokenManager
@@ -55,7 +52,7 @@ public class DbManager {
         if(token==null){
             return;
         }
-        userRef.update("push_token", token).addOnCompleteListener(new OnCompleteListener<Void>() {
+        getUserRef().update("push_token", token).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -162,6 +159,7 @@ public class DbManager {
         });
     }
     public static void createUser(User user, FirebaseTask<Void> userFirebaseTask){
+        // TODO()
         user.setUid(getUid());
         getUserRef().set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -515,10 +513,10 @@ public class DbManager {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if(task.isSuccessful()){
                             Map<String, Object> data = task.getResult().getData();
-                            statsLoadingTask.onMetaDataLoaded(data);
                             if(data==null){
                                 statsLoadingTask.onComplete(true, null);
                             }else {
+                                statsLoadingTask.onMetaDataLoaded(data);
                                 List<DocumentReference> ordersRef = (List<DocumentReference>) data.get("orders");
                                 if(ordersRef.size()==0){
                                     statsLoadingTask.onComplete(true, null);
@@ -627,31 +625,19 @@ public class DbManager {
         return EmailAuthProvider.getCredential(number+Utils.getDomain(), pwd);
     }
     public static FirebaseAuth getmAuth(){
-        if(mAuth==null){
-            mAuth = FirebaseAuth.getInstance();
-        }
-        return mAuth;
+        return FirebaseAuth.getInstance();
     }
     public static String getUid(){
         return getmAuth().getUid();
     }
     public static FirebaseUser getUser(){
-        if(user==null){
-            user = getmAuth().getCurrentUser();
-        }
-        return user;
+        return getmAuth().getCurrentUser();
     }
     public static FirebaseFirestore getmRef(){
-        if(mRef==null){
-            mRef = FirebaseFirestore.getInstance();
-        }
-        return mRef;
+        return FirebaseFirestore.getInstance();
     }
     public static DocumentReference getUserRef(){
-        if(userRef==null){
-            userRef = getmRef().document("user/"+getUid());
-        }
-        return userRef;
+        return getmRef().document("user/"+getUid());
     }
     public static DocumentReference getAdminRef(){
         return getmRef().document("user/"+Utils.ADMIN_ID);

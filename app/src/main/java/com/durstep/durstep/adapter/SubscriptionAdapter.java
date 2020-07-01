@@ -98,14 +98,16 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         subscriptionList.add(subscription);
         notifyDataSetChanged();
     }
-
     public void addAll(List<Subscription> subscriptions){
         subscriptionList.clear();
         for(Subscription subscription: subscriptions){
             add(subscription);
         }
     }
-
+    public void clear(){
+        subscriptionList.clear();
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
         return subscriptionList.size();

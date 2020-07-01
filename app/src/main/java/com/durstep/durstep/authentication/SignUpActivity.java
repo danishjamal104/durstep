@@ -79,11 +79,13 @@ public class SignUpActivity extends BaseActivity {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if(isSuccess){
-                    TokenManager.handleOnLoginSignUp(SignUpActivity.this);
-                    AppMode.updateAppMode(SignUpActivity.this, AppMode.CLIENT);
-                    UserManager.setUser(SignUpActivity.this, user);
-                    NotifyManager.notifyAdmin_newUser(SignUpActivity.this, user.getName(), user.getNumber());
-                    startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                    intent.putExtra("__init__", true);
+                    intent.putExtra("login", false);
+                    intent.putExtra("type", user.getType());
+                    intent.putExtra("name", user.getName());
+                    intent.putExtra("number", user.getNumber());
+                    startActivity(intent);
                     finishAffinity();
                 }else{
                     toast(error);

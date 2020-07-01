@@ -1,7 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 admin.initializeApp()
-
 const month = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 
 'NOV', 'DEC']
 export const notify = 
@@ -154,7 +153,15 @@ functions.firestore.document('orders/{oId}')
 
     const order = dt.data()
     const time: Date = (<admin.firestore.Timestamp>order.time).toDate()
-    const doc_name = month[time.getMonth()]+'_'+time.getFullYear()
+
+    const localTime = time.getTime()
+    const localOffset = time.getTimezoneOffset() * 60000
+    const utc = localTime+localOffset
+    const delhi = utc+(3600000*5.5)
+    const date_in_india = new Date(delhi)
+
+    const doc_name = month[date_in_india.getMonth()]+'_'+date_in_india.getFullYear()
+    console.log(doc_name)
 
     return admin.firestore().doc('admin/meta-data').get()
     .then(snap => {

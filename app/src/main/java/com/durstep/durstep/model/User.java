@@ -17,13 +17,13 @@ import com.google.firebase.firestore.Exclude;
 import java.util.List;
 
 public class User {
-    public final static int CLIENT = 0;
-    public final static int ADMIN = 1;
-    public final static int DISTRIBUTOR = -1;
+    public final static int CLIENT = AppMode.CLIENT;
+    public final static int ADMIN = AppMode.ADMIN;
+    public final static int DISTRIBUTOR = AppMode.DISTRIBUTOR;
 
     String name;
     String number;
-    int type = 0;
+    int type = User.CLIENT;
     int totalOrder = 0;
     String uid;
     String push_token;

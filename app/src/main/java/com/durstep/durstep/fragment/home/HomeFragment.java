@@ -211,11 +211,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if(isSuccess){
-                    NotifyManager.notifyAdmin_newSubscription(getContext(), subscription);
+                    NotifyManager.notifyAdmin_newSubscription(getActivity(), subscription);
                 }else{
                     Utils.toast(getContext(), error);
                 }
                 disableLoading();
+                subs_adapter.clear();
+                loadSubscriptions();
             }
             @Override
             public void onSingleDataLoaded(Void object) {}

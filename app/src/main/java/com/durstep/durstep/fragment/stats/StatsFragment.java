@@ -108,7 +108,7 @@ public class StatsFragment extends Fragment {
             @Override
             public void onComplete(boolean isSuccess, String error) {
                 if (isSuccess && error==null){
-                    Utils.toast(getContext(), "No orders this month");
+                    Utils.toast(getActivity(), "No orders this month");
                     emptyMetaData();
                 }else{
                     Utils.longToast(getContext(), error);

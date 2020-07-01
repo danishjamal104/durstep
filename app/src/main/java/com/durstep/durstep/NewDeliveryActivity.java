@@ -55,7 +55,12 @@ public class NewDeliveryActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_delivery);
-        isModify = getIntent().getExtras().getInt("isModify", 0);
+        Bundle bundle = getIntent().getExtras();
+        if(bundle!=null){
+            isModify = getIntent().getExtras().getInt("isModify", 0);
+        }else{
+            isModify = 0;
+        }
         init();
     }
     void init(){

@@ -56,17 +56,20 @@ public class NotifyManager {
         String url =getUrl(to, title, msg);
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
-                        Utils.log(response);
+                        Utils.log("sdfdf: "+response);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Utils.log(error.getLocalizedMessage());
+                String e = error.getLocalizedMessage();
+                if(e!=null){
+                    Utils.log(e);
+                }
             }
         });
 

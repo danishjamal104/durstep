@@ -15,6 +15,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.TextView;
 
+import com.durstep.durstep.authentication.SignUpActivity;
 import com.durstep.durstep.fragment.home.Admin_HomeFragment;
 import com.durstep.durstep.fragment.home.Distributor_HomeFragment;
 import com.durstep.durstep.fragment.home.HomeFragment;
@@ -28,9 +29,12 @@ import com.durstep.durstep.helper.Utils;
 import com.durstep.durstep.interfaces.LocationUpdateListener;
 import com.durstep.durstep.manager.DbManager;
 import com.durstep.durstep.manager.LocationManager;
+import com.durstep.durstep.manager.NotifyManager;
 import com.durstep.durstep.manager.TokenManager;
+import com.durstep.durstep.manager.UserManager;
 import com.durstep.durstep.model.AppMode;
 import com.durstep.durstep.model.Menu;
+import com.durstep.durstep.model.User;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -60,6 +64,27 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if(DbManager.getUid()!=null){
+            Bundle bundle = getIntent().getExtras();
+            if(bundle!=null){
+                boolean init = bundle.getBoolean("__init__", false);
+                if(init){
+                    boolean login = bundle.getBoolean("login", false);
+                    int type = bundle.getInt("type", AppMode.CLIENT);
+                    String name = bundle.getString("name");
+                    String number = bundle.getString("number");
+                    User user = new User();
+                    user.setName(name);
+                    user.setNumber(number);
+
+                    TokenManager.handleOnLoginSignUp(MainActivity.this);
+                    AppMode.updateAppMode(MainActivity.this, type);
+                    UserManager.setUser(MainActivity.this, user);
+
+                    if(!login){
+                        NotifyManager.notifyAdmin_newUser(MainActivity.this, user.getName(), user.getNumber());
+                    }
+                }
+            }
             init();
             getLocation(null);
         }else {

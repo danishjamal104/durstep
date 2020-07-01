@@ -89,14 +89,23 @@ public class LoginActivity extends BaseActivity {
                 }
             }
             @Override
-            public void onSingleDataLoaded(User object) {
-                if(object==null && isLoggedIn){
+            public void onSingleDataLoaded(User user) {
+                if(user==null && isLoggedIn){
                     logOut();
                 }else{
-                    TokenManager.handleOnLoginSignUp(LoginActivity.this);
-                    AppMode.updateAppMode(LoginActivity.this, object.getType());
-                    UserManager.setUser(LoginActivity.this, object);
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    if(user==null){
+                        hide(progressBar);
+                        Utils.toast(LoginActivity.this, getString(R.string.server_error));
+                        return;
+                    }
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("__init__", true);
+                    intent.putExtra("login", true);
+                    intent.putExtra("type", user.getType());
+                    intent.putExtra("name", user.getName());
+                    intent.putExtra("number", user.getNumber());
+
+                    startActivity(intent);
                     finishAffinity();
                 }
                 hide(progressBar);
