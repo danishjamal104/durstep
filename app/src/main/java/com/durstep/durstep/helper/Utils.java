@@ -30,13 +30,13 @@ import java.util.Map;
 
 public class Utils {
 
-    public final static String ADMIN_ID = "X1XXmSzO1PVgRcDU69j9F8PLi1V2";
+    public final static String ADMIN_ID = "It2QGxGGR3UvthnX670zKrS23zI3";
 
     public final static int LOCATION_PERMISSION_CODE = 372;
     public final static double[] available_pack = {0.5,1,1.5,2,2.5,3,3.5,4,4.5,5};
 
-    public final static String ORDER_RECEIVE_URL = "https://us-central1-durstep-7e7a8.cloudfunctions.net/scan?to=%s&l=%s";
-    public final static String NOTIFICATION_URL = "https://us-central1-durstep-7e7a8.cloudfunctions.net/notify?to=%s&title=%s&msg=%s&type=%s";
+    public final static String ORDER_RECEIVE_URL = "https://us-central1-durstep-fc76e.cloudfunctions.net/scan?to=%s&l=%s";
+    public final static String NOTIFICATION_URL = "https://us-central1-durstep-fc76e.cloudfunctions.net/notify?to=%s&title=%s&msg=%s&type=%s";
 
     public static boolean isValidNumber(int number){
         return isValidNumber(""+number);
